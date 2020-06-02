@@ -1,5 +1,6 @@
 // THREEJS RELATED VARIABLES
 let scene,camera,renderer;
+let controls;
 
 //LIGHTS 
 let hemisphereLight, directionalLight, directionalLightHelper;
@@ -13,21 +14,34 @@ window.onload = function init(){
    createCharacter()
 }
 
-function createScene(){
-     scene = new THREE.Scene()
+window.onload = function init() {
+    createScene();
+    createCharacter();
+    
 
-     camera = new THREE.PerspectiveCamera(60, window.innerWidth/ window.innerHeight,1,10000)
+    window.addEventListener('keypress', handleKeyPress);
 
-     renderer = new THREE.WebGLRenderer();
-     renderer.setSize(window.innerWidth,window.innerHeight);
+    animate();
+}
 
-    renderer.setClearColor("#F08080");
+function createScene() {
+    scene = new THREE.Scene()
 
-        // add the output of the renderer to the DIV with id "world"
-        document.getElementById('world').appendChild(renderer.domElement);
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000)
+    controls = new THREE.OrbitControls(camera);
+    controls.addEventListener('change', function () {
+        renderer.render(scene, camera);
+    });
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-        // listen to the screen: if the user resizes it we have to update the camera and the renderer size
-        window.addEventListener('resize', handleWindowResize, false);
+    renderer.setClearColor("#e4e0ba");
+
+    // add the output of the renderer to the DIV with id "world"
+    document.getElementById('world').appendChild(renderer.domElement);
+
+    // listen to the screen: if the user resizes it we have to update the camera and the renderer size
+    window.addEventListener('resize', handleWindowResize, false);
 }
 
 function handleWindowResize() {
@@ -58,6 +72,18 @@ function createCharacter(){
     scene.add(bob)
 }
 
+
+function handleKeyPress(event) {
+
+
+}
+
+function updateCharacter() {
+
+    // update the Character's position
+   // char.position.y += 1;
+   // char.position.x += 1;
+}
 
 
 function animate() {
