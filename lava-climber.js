@@ -8,33 +8,68 @@ let hemisphereLight, directionalLight, directionalLightHelper;
 //Character
 let bob
 
-window.onload = function init(){
-   createScene()
-   animate()
-   createCharacter()
+let input = {
+    x:0,
+    y:0
 }
+
+
 
 window.onload = function init() {
     createScene();
+
     createCharacter();
+    createLights()
+
     
 
-    window.addEventListener('keypress', handleKeyPress);
-
     animate();
+    window.addEventListener('keyup', handleKeyPress);
+    window.addEventListener('keydown', handleKeyRelease);
 }
-
+/*
 function createScene() {
     scene = new THREE.Scene()
 
-    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000)
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 100)
+
     controls = new THREE.OrbitControls(camera);
+
     controls.addEventListener('change', function () {
         renderer.render(scene, camera);
     });
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
 
+    renderer.setClearColor("#DC143C");
+
+    // add the output of the renderer to the DIV with id "world"
+    document.getElementById('world').appendChild(renderer.domElement);
+
+    // listen to the screen: if the user resizes it we have to update the camera and the renderer size
+   // window.addEventListener('resize', handleWindowResize, false);
+
+}
+*/
+
+function createScene() {
+    // create an empty scene, that will hold all our elements such as objects, cameras and lights
+    scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0xf7d9aa, 100);
+
+    // create a camera, which defines where we're looking at
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+
+    // position the camera
+    camera.position.x = 120;
+    camera.position.z = 200; //ALTERED: change from Z=2000 to Z=200
+    camera.position.y = 100;
+
+    // create a render and set the size
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // configure renderer clear color
     renderer.setClearColor("#e4e0ba");
 
     // add the output of the renderer to the DIV with id "world"
@@ -53,30 +88,73 @@ function handleWindowResize() {
     camera.updateProjectionMatrix();
 }
 
-
-
 function createCharacter(){
 
     bob = new THREE.Object3D();
     // scale it down
-    //plane.scale.set(0.25, 0.25, 0.25);
-    bob.position.y = 100
-    var cyan = new THREE.Color("rgb(0, 255, 255)");
 
-    let geomBody = new THREE.BoxGeometry(60, 50, 50)
 
-    let body = new THREE.Mesh(geomBody, cyan);
+    
+    const materialWhite = new THREE.MeshPhongMaterial({
+        color: 0xd8d0d1,
+        wireframe: false
+    });
+
+    let geomBody = new THREE.BoxGeometry(10, 10, 10)
+
+    let body = new THREE.Mesh(geomBody, materialWhite);
 
     bob.add(body)
     console.log("Bob created")
     scene.add(bob)
+
+  
 }
+
+
 
 
 function handleKeyPress(event) {
 
+if(event.key == 'ArrowRight'){
+ input.x += 1
 
 }
+
+else if(event.key =="ArrowLeft"){
+ input.x -= 1
+}
+
+else if(event.key =="ArrowUp"){
+ input.y += 1
+}
+
+console.log(input.x, "," ,input.y)
+
+
+}
+
+function handleKeyRelease(event){
+    event.repeat = false;
+    event.preventDefault();
+}
+
+function createLights() {
+    // HemisphereLight
+    hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, 0.9);
+    scene.add(hemisphereLight);
+
+    // DirectionalLight
+    directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    directionalLight.position.set(80, 150, 60);
+    directionalLight.target = 
+    scene.add(directionalLight);
+
+    directionalLightHelper = new THREE.DirectionalLightHelper( directionalLight );    
+    scene.add( directionalLightHelper );
+
+}
+
 
 function updateCharacter() {
 
@@ -87,10 +165,8 @@ function updateCharacter() {
 
 
 function animate() {
- 
+    renderer.render(scene,camera)
     // render
-    renderer.render(scene, camera);
-
-
-    requestAnimationFrame(animate);
+   requestAnimationFrame(animate);
+   
 }
