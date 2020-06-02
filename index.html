@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lava-Climber</title>
+    <style>
+        /* set margin to 0 and overflow to hidden, to use the complete page */    
+        .world {
+            position: absolute;
+            overflow: hidden;
+            width: 50%;
+            height: 100%;
+            left: 25%;
+        }
+        
+        body {
+            margin: 0;
+            color: #444;
+            background: #f6f6f6;
+        }
+    </style>
+    <script type="text/javascript" src="./libs/three.min.js"></script>
+    <script ype="text/javascript" src="lava-climber.js"></script>
+</head>
+
+<body>
+    <!-- This DIV will hold the output -->
+    <div class="world" id="world"></div>
+</body>
+
+</html>
