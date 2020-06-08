@@ -7,9 +7,18 @@ let hemisphereLight, directionalLight, directionalLightHelper;
 
 //Character
 let bob
+<<<<<<< HEAD
 let penguin
 // Physics
+=======
+>>>>>>> 817c5a66c30352a487ae30e243b0a3be3ec0665f
 
+//Platforms
+
+let platforms = []
+let platformObject
+
+// Physics
 let player = {
     velX: 0,
     velY: 0,
@@ -18,21 +27,28 @@ let player = {
 
 }
 
-let grav = 0.5
-
+let grav = 1
+let speed = 2
 
 window.onload = function init() {
     createScene();
 
     createCharacter();
+    createPlatforms();
     createLights()
 
 
 
     animate();
+<<<<<<< HEAD
     window.addEventListener('keydown', handleKeyPressed, false);
     window.addEventListener('keyup', handleKeyReleased, false);
 
+=======
+    window.addEventListener('keydown', handleKeyPressed);
+    window.addEventListener('keyup', handleKeyReleased);
+   
+>>>>>>> 817c5a66c30352a487ae30e243b0a3be3ec0665f
 }
 /*
 function createScene() {
@@ -211,6 +227,56 @@ function createCharacter() {
 
 }
 
+class Platform{
+    constructor(x,y,width,height){
+
+        this.x = x
+        this.y = y
+        this.width = width
+        this.height = height
+
+    }
+
+    create(){
+
+       
+
+            
+        const materialWhite = new THREE.MeshPhongMaterial({
+            color: 0xd8d0d1,
+            wireframe: false
+        });
+
+        let geomBody = new THREE.BoxGeometry(this.width, this.height, 10)
+
+        let platformBody = new THREE.Mesh(geomBody, materialWhite);
+
+        platformBody.position.y = this.y
+        platformBody.position.x = this.x
+
+        platformObject.add(platformBody)
+
+    }
+}
+
+function createPlatforms(){
+
+    platformObject = new THREE.Object3D;
+
+    platforms.push(new Platform(20,20,100,10))
+
+    platforms.push(new Platform(5,40,50,10))
+
+    platforms.forEach(function(platform){
+        platform.create()
+    })
+
+
+    scene.add(platformObject)
+}
+
+
+
 
 
 
@@ -223,14 +289,14 @@ function handleKeyPressed(event) {
     keys[event.keyCode] = true;
 
     //Right
-    if (keys[39]) {
-        player.velX += 1
-
-    }
+    if(keys[39]){
+        player.velX = 1
+       
+       }
     //Left   
-    if (keys[37]) {
-        player.velX -= 1
-    }
+    else if(keys[37]){
+        player.velX = -1
+       }
     //Up 
     if (keys[38]) {
         if (player.height == 0) {
@@ -239,17 +305,27 @@ function handleKeyPressed(event) {
 
     }
 
-    event.preventDefault()
+    
 
-    console.log(player.velX, ",", player.velY);
+       event.preventDefault()
+       
+      
 }
 
 function handleKeyReleased(event) {
 
     //Mark keys that were released
     keys[event.keyCode] = false
-
-
+   
+    if(event.keyCode == 39 || event.keyCode == 37){
+        player.velX = 0
+    }
+   
+    if(event.keyCode == 38){
+        player.jump = false
+    }
+    event.preventDefault()
+        
 }
 
 function createLights() {
@@ -268,21 +344,24 @@ function createLights() {
 
 }
 
-function jump() {
-    if (player.jump == true) {
+function jump (){
+    
+    if(player.jump == true){
 
-        if (player.height >= 0 && player.height < 100) {
-            player.height += 1
-            player.velY += 1
-        } else if (player.height > 100) {
-
+        if(player.height >= 0 && player.height < 50){
+            player.height += 2
+            player.velY = 2
+        }else if (player.height > 100){
+            
             player.jump = false
         }
     }
 
-    if (player.height)
-        console.log("player height:", player.height)
-
+    if(player.height == 50 || player.jump == false){
+        if(bob.position.y == 0){
+            player.height = 0
+        }
+    }
 
 }
 
@@ -290,16 +369,18 @@ function updateCharacter() {
 
     jump()
     // update the Character's position
-    bob.position.y += player.velY;
-    bob.position.x += player.velX;
+    bob.position.y += player.velY * speed;
+    bob.position.x += player.velX * speed;
 
-
-    if (bob.position.y > 0) {
-        bob.position.y -= grav
+    
+    if(bob.position.y > 0 ){
+        bob.position.y -= grav * speed
     }
+  
 
     player.velY = 0
-    player.velX = 0
+
+  
 }
 
 
