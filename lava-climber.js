@@ -7,11 +7,8 @@ let hemisphereLight, directionalLight, directionalLightHelper;
 
 //Character
 let bob
-<<<<<<< HEAD
 let penguin
 // Physics
-=======
->>>>>>> 817c5a66c30352a487ae30e243b0a3be3ec0665f
 
 //Platforms
 
@@ -40,15 +37,9 @@ window.onload = function init() {
 
 
     animate();
-<<<<<<< HEAD
-    window.addEventListener('keydown', handleKeyPressed, false);
-    window.addEventListener('keyup', handleKeyReleased, false);
-
-=======
     window.addEventListener('keydown', handleKeyPressed);
     window.addEventListener('keyup', handleKeyReleased);
    
->>>>>>> 817c5a66c30352a487ae30e243b0a3be3ec0665f
 }
 /*
 function createScene() {
