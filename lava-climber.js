@@ -349,7 +349,7 @@ function jump (){
     }
 
     if(player.height == 50 || player.jump == false){
-        if(bob.position.y == 0){
+        if(penguin.position.y == 0){
             player.height = 0
         }
     }
@@ -360,12 +360,12 @@ function updateCharacter() {
 
     jump()
     // update the Character's position
-    bob.position.y += player.velY * speed;
-    bob.position.x += player.velX * speed;
+    penguin.position.y += player.velY * speed;
+    penguin.position.x += player.velX * speed;
 
     
-    if(bob.position.y > 0 ){
-        bob.position.y -= grav * speed
+    if(penguin.position.y > 0 ){
+        penguin.position.y -= grav * speed
     }
   
 
