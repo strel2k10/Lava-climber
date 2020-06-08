@@ -200,14 +200,47 @@ function createCharacter() {
 
     // beak
 
-    var geometryBeak = new THREE.CylinderGeometry(0, 5, 10, 4, 1)    
-    var beak = new THREE.Mesh(geometryBeak, materialOrange);
+    let geometryBeak = new THREE.CylinderGeometry(0, 5, 10, 4, 1)    
+    let beak = new THREE.Mesh(geometryBeak, materialOrange);
     beak.position.y = -1
     beak.position.z = 10
     beak.rotation.x = 2000
 
 
     head.add(beak);
+
+    // hands
+
+    let geometryHands = new THREE.CylinderGeometry(0.5, 8, 20, 4, 1)
+    let hand1 = new THREE.Mesh(geometryHands, materialOrange);
+    let hand2 = new THREE.Mesh(geometryHands, materialOrange);
+    hand1.rotation.z = 27* Math.PI / 20
+    hand1.position.x = 13.5
+    hand1.position.y = 1.10
+
+    hand2.rotation.z = - 27* Math.PI / 20
+    hand2.position.x = - 13.5
+    hand2.position.y = 1.10
+
+    body.add(hand1);
+    body.add(hand2);
+
+
+
+    // feet
+    let geometryFeet = new THREE.CylinderGeometry(0.5, 6, 12, 4, 1)
+    let foot1 = new THREE.Mesh(geometryFeet, materialOrange);
+    let foot2 = new THREE.Mesh(geometryFeet, materialOrange);
+    foot1.rotation.z = 27* Math.PI / 20
+    foot1.position.x = 10
+    foot1.position.y = - 13
+
+    foot2.rotation.z = - 27* Math.PI / 20
+    foot2.position.x = - 10
+    foot2.position.y = - 13
+
+    body.add(foot1);
+    body.add(foot2);
 
 
 
@@ -228,9 +261,7 @@ class Platform{
 
     }
 
-    create(){
-
-       
+    create(){       
 
             
         const materialWhite = new THREE.MeshPhongMaterial({
@@ -282,11 +313,13 @@ function handleKeyPressed(event) {
     //Right
     if(keys[39]){
         player.velX = 1
+        penguin.rotation.y = Math.PI / 2 * 0.7
        
        }
     //Left   
     else if(keys[37]){
         player.velX = -1
+        penguin.rotation.y = - Math.PI / 2 * 0.7
        }
     //Up 
     if (keys[38]) {
