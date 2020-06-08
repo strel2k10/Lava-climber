@@ -7,8 +7,9 @@ let hemisphereLight, directionalLight, directionalLightHelper;
 
 //Character
 let bob
-// Physics
 
+
+// Physics
 let player = {
     velX:0,
     velY:0,
@@ -17,8 +18,8 @@ let player = {
     
 }
 
-let grav = 0.5
-
+let grav = 1
+let speed = 2
 
 window.onload = function init() {
     createScene();
@@ -29,8 +30,8 @@ window.onload = function init() {
     
 
     animate();
-    window.addEventListener('keydown', handleKeyPressed,false);
-    window.addEventListener('keyup', handleKeyReleased,false);
+    window.addEventListener('keydown', handleKeyPressed);
+    window.addEventListener('keyup', handleKeyReleased);
    
 }
 /*
@@ -130,12 +131,12 @@ function handleKeyPressed(event){
 
     //Right
     if(keys[39]){
-        player.velX += 1
+        player.velX = 1
        
        }
     //Left   
-    if(keys[37]){
-        player.velX -= 1
+    else if(keys[37]){
+        player.velX = -1
        }
     //Up 
     if(keys[38]){
@@ -145,18 +146,27 @@ function handleKeyPressed(event){
         
     }
 
+    
+
        event.preventDefault()
        
-       console.log(player.velX, "," ,player.velY)
-       ;
+      
 }
 
 function handleKeyReleased(event) {
 
     //Mark keys that were released
     keys[event.keyCode] = false
-
-
+   
+    if(event.keyCode == 39 || event.keyCode == 37){
+        player.velX = 0
+    }
+   
+    if(event.keyCode == 38){
+        player.jump = false
+    }
+    event.preventDefault()
+        
 }
 
 function createLights() {
@@ -176,19 +186,26 @@ function createLights() {
 }
 
 function jump (){
+    
     if(player.jump == true){
 
-        if(player.height >= 0 && player.height < 100){
-            player.height += 1
-            player.velY += 1
+        if(player.height >= 0 && player.height < 50){
+            player.height += 2
+            player.velY = 2
         }else if (player.height > 100){
             
             player.jump = false
         }
     }
 
-    if(player.height)
-    console.log("player height:", player.height)
+    if(player.height == 50 || player.jump == false){
+        if(bob.position.y == 0){
+            player.height = 0
+        }
+    }
+
+
+  
 
     
 }
@@ -196,16 +213,18 @@ function updateCharacter() {
 
     jump()
     // update the Character's position
-    bob.position.y += player.velY;
-    bob.position.x += player.velX;
+    bob.position.y += player.velY * speed;
+    bob.position.x += player.velX * speed;
 
     
     if(bob.position.y > 0 ){
-        bob.position.y -= grav
+        bob.position.y -= grav * speed
     }
+  
 
     player.velY = 0
-    player.velX = 0
+
+  
 }
 
 
