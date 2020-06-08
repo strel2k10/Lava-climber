@@ -8,6 +8,10 @@ let hemisphereLight, directionalLight, directionalLightHelper;
 //Character
 let bob
 
+//Platforms
+
+let platforms = []
+
 
 // Physics
 let player = {
@@ -18,7 +22,7 @@ let player = {
     
 }
 
-let grav = 1
+let grav = 0.5
 let speed = 2
 
 window.onload = function init() {
@@ -118,6 +122,21 @@ function createCharacter(){
   
 }
 
+class platform{
+    constructor(x,y,width,height){
+
+        this.x = x
+        this.y = y
+        this.width = width
+        this.height = height
+
+    }
+
+    create(){
+        
+    }
+}
+
 
 
 
@@ -190,8 +209,8 @@ function jump (){
     if(player.jump == true){
 
         if(player.height >= 0 && player.height < 50){
-            player.height += 2
-            player.velY = 2
+            player.height += 1
+            player.velY = 1
         }else if (player.height > 100){
             
             player.jump = false
