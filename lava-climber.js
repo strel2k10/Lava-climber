@@ -159,8 +159,8 @@ function createLights() {
 function updateCharacter() {
 
     // update the Character's position
-   // char.position.y += 1;
-   // char.position.x += 1;
+   // bob.position.y += 1;
+   // bob.position.x += 1;
 }
 
 
