@@ -7,12 +7,17 @@ let hemisphereLight, directionalLight, directionalLightHelper;
 
 //Character
 let bob
+// Physics
 
-let input = {
-    x:0,
-    y:0
+let player = {
+    velX:0,
+    velY:0,
+    height:0,
+    jump:false
+    
 }
 
+let grav = 0.5
 
 
 window.onload = function init() {
@@ -24,8 +29,9 @@ window.onload = function init() {
     
 
     animate();
-    window.addEventListener('keyup', handleKeyPress);
-    window.addEventListener('keydown', handleKeyRelease);
+    window.addEventListener('keydown', handleKeyPressed,false);
+    window.addEventListener('keyup', handleKeyReleased,false);
+   
 }
 /*
 function createScene() {
@@ -114,29 +120,43 @@ function createCharacter(){
 
 
 
-function handleKeyPress(event) {
 
-if(event.key == 'ArrowRight'){
- input.x += 1
+var keys = []
 
+function handleKeyPressed(event){
+
+    //store an entry for every key pressed
+    keys[event.keyCode] = true;
+
+    //Right
+    if(keys[39]){
+        player.velX += 1
+       
+       }
+    //Left   
+    if(keys[37]){
+        player.velX -= 1
+       }
+    //Up 
+    if(keys[38]){
+        if (player.height == 0){
+            player.jump = true
+        }
+        
+    }
+
+       event.preventDefault()
+       
+       console.log(player.velX, "," ,player.velY)
+       ;
 }
 
-else if(event.key =="ArrowLeft"){
- input.x -= 1
-}
+function handleKeyReleased(event) {
 
-else if(event.key =="ArrowUp"){
- input.y += 1
-}
-
-console.log(input.x, "," ,input.y)
+    //Mark keys that were released
+    keys[event.keyCode] = false
 
 
-}
-
-function handleKeyRelease(event){
-    event.repeat = false;
-    event.preventDefault();
 }
 
 function createLights() {
@@ -155,16 +175,42 @@ function createLights() {
 
 }
 
+function jump (){
+    if(player.jump == true){
 
+        if(player.height >= 0 && player.height < 100){
+            player.height += 1
+            player.velY += 1
+        }else if (player.height > 100){
+            
+            player.jump = false
+        }
+    }
+
+    if(player.height)
+    console.log("player height:", player.height)
+
+    
+}
 function updateCharacter() {
 
+    jump()
     // update the Character's position
-   // bob.position.y += 1;
-   // bob.position.x += 1;
+    bob.position.y += player.velY;
+    bob.position.x += player.velX;
+
+    
+    if(bob.position.y > 0 ){
+        bob.position.y -= grav
+    }
+
+    player.velY = 0
+    player.velX = 0
 }
 
 
 function animate() {
+    updateCharacter()
     renderer.render(scene,camera)
     // render
    requestAnimationFrame(animate);
