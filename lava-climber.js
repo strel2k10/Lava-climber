@@ -11,7 +11,7 @@ let bob
 //Platforms
 
 let platforms = []
-
+let platformObject
 
 // Physics
 let player = {
@@ -22,13 +22,14 @@ let player = {
     
 }
 
-let grav = 0.5
+let grav = 1
 let speed = 2
 
 window.onload = function init() {
     createScene();
 
     createCharacter();
+    createPlatforms();
     createLights()
 
     
@@ -122,7 +123,7 @@ function createCharacter(){
   
 }
 
-class platform{
+class Platform{
     constructor(x,y,width,height){
 
         this.x = x
@@ -133,9 +134,44 @@ class platform{
     }
 
     create(){
-        
+
+       
+
+            
+        const materialWhite = new THREE.MeshPhongMaterial({
+            color: 0xd8d0d1,
+            wireframe: false
+        });
+
+        let geomBody = new THREE.BoxGeometry(this.width, this.height, 10)
+
+        let platformBody = new THREE.Mesh(geomBody, materialWhite);
+
+        platformBody.position.y = this.y
+        platformBody.position.x = this.x
+
+        platformObject.add(platformBody)
+
     }
 }
+
+function createPlatforms(){
+
+    platformObject = new THREE.Object3D;
+
+    platforms.push(new Platform(20,20,100,10))
+
+    platforms.push(new Platform(5,40,50,10))
+
+    platforms.forEach(function(platform){
+        platform.create()
+    })
+
+
+    scene.add(platformObject)
+}
+
+
 
 
 
@@ -209,8 +245,8 @@ function jump (){
     if(player.jump == true){
 
         if(player.height >= 0 && player.height < 50){
-            player.height += 1
-            player.velY = 1
+            player.height += 2
+            player.velY = 2
         }else if (player.height > 100){
             
             player.jump = false
@@ -223,11 +259,9 @@ function jump (){
         }
     }
 
-
-  
-
     
 }
+
 function updateCharacter() {
 
     jump()
