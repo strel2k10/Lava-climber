@@ -1,5 +1,5 @@
 // THREEJS RELATED VARIABLES
-let scene,camera,renderer;
+let scene, camera, renderer;
 let controls;
 
 //LIGHTS 
@@ -7,14 +7,15 @@ let hemisphereLight, directionalLight, directionalLightHelper;
 
 //Character
 let bob
+let penguin
 // Physics
 
 let player = {
-    velX:0,
-    velY:0,
-    height:0,
-    jump:false
-    
+    velX: 0,
+    velY: 0,
+    height: 0,
+    jump: false
+
 }
 
 let grav = 0.5
@@ -26,12 +27,12 @@ window.onload = function init() {
     createCharacter();
     createLights()
 
-    
+
 
     animate();
-    window.addEventListener('keydown', handleKeyPressed,false);
-    window.addEventListener('keyup', handleKeyReleased,false);
-   
+    window.addEventListener('keydown', handleKeyPressed, false);
+    window.addEventListener('keyup', handleKeyReleased, false);
+
 }
 /*
 function createScene() {
@@ -61,15 +62,18 @@ function createScene() {
 function createScene() {
     // create an empty scene, that will hold all our elements such as objects, cameras and lights
     scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0xf7d9aa, 100);
+    //scene.fog = new THREE.Fog(0xf7d9aa, 100);
 
     // create a camera, which defines where we're looking at
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
 
+
     // position the camera
-    camera.position.x = 120;
-    camera.position.z = 200; //ALTERED: change from Z=2000 to Z=200
+    camera.position.x = 60;
+    camera.position.z = 250; //ALTERED: change from Z=2000 to Z=200
     camera.position.y = 100;
+    camera.rotation.y = Math.PI * 2 * -0.05
+    camera.rotation.z = Math.PI * 2 * 0.007
 
     // create a render and set the size
     renderer = new THREE.WebGLRenderer();
@@ -94,27 +98,117 @@ function handleWindowResize() {
     camera.updateProjectionMatrix();
 }
 
-function createCharacter(){
+function createCharacter() {
 
     bob = new THREE.Object3D();
-    // scale it down
+    penguin = new THREE.Object3D();
 
 
-    
     const materialWhite = new THREE.MeshPhongMaterial({
-        color: 0xd8d0d1,
+        color: 0xffffff,
+        wireframe: false
+    });
+    const materialBlack = new THREE.MeshPhongMaterial({
+        color: 0x000000,
         wireframe: false
     });
 
+    const materialOrange = new THREE.MeshPhongMaterial({
+        color: 0xff9a4d,
+        wireframe: false
+    });
+
+    
+
     let geomBody = new THREE.BoxGeometry(10, 10, 10)
 
-    let body = new THREE.Mesh(geomBody, materialWhite);
+    let bodytest = new THREE.Mesh(geomBody, materialWhite);
 
-    bob.add(body)
+    bob.add(bodytest)
     console.log("Bob created")
     scene.add(bob)
 
-  
+    // tronco
+    let geometryBody = new THREE.SphereGeometry(15, 32, 32);
+    let body = new THREE.Mesh(geometryBody, materialBlack);
+    body.position.x = 50
+    body.position.y = 30
+    body.scale.y = 1.4
+    body.scale.z = 0.8
+
+
+    penguin.add(body)
+
+
+    // belly
+    let geometryBelly = new THREE.SphereGeometry(9.4, 32, 32);
+    let belly = new THREE.Mesh(geometryBelly, materialWhite);
+
+    belly.position.z = 10.39
+    belly.scale.y = 1.19
+    belly.scale.z = 0.5
+
+
+    body.add(belly)
+
+    // head
+
+    let geometryHead = new THREE.SphereGeometry(10, 32, 32);
+    let head = new THREE.Mesh(geometryHead, materialBlack);
+    head.position.y = 18
+
+    head.scale.y = 0.9
+
+    body.add(head)
+
+    // face
+
+    let geometryFace = new THREE.SphereGeometry(7, 32, 32);
+    let face = new THREE.Mesh(geometryFace, materialWhite);
+    face.position.y = 0.5
+    face.position.z = 6.9
+    face.scale.z = 0.5
+    face.scale.y = 0.9
+
+    head.add(face)
+
+    // olhos
+
+    let geometryEye = new THREE.SphereGeometry(1.2, 32, 32);
+    let eye1 = new THREE.Mesh(geometryEye, materialBlack);
+    let eye2 = new THREE.Mesh(geometryEye, materialBlack);
+
+    eye1.position.x = -3
+    eye1.position.y = 2
+    eye1.position.z = 9.8
+
+    eye2.position.x = 3
+    eye2.position.y = 2
+    eye2.position.z = 9.8
+
+
+
+    head.add(eye1)
+    head.add(eye2)
+
+    // beak
+
+    var geometryBeak = new THREE.CylinderGeometry(0, 5, 10, 4, 1)    
+    var beak = new THREE.Mesh(geometryBeak, materialOrange);
+    beak.position.y = -1
+    beak.position.z = 10
+    beak.rotation.x = 2000
+
+
+    head.add(beak);
+
+
+
+
+
+
+    scene.add(penguin)
+
 }
 
 
@@ -123,32 +217,31 @@ function createCharacter(){
 
 var keys = []
 
-function handleKeyPressed(event){
+function handleKeyPressed(event) {
 
     //store an entry for every key pressed
     keys[event.keyCode] = true;
 
     //Right
-    if(keys[39]){
+    if (keys[39]) {
         player.velX += 1
-       
-       }
+
+    }
     //Left   
-    if(keys[37]){
+    if (keys[37]) {
         player.velX -= 1
-       }
+    }
     //Up 
-    if(keys[38]){
-        if (player.height == 0){
+    if (keys[38]) {
+        if (player.height == 0) {
             player.jump = true
         }
-        
+
     }
 
-       event.preventDefault()
-       
-       console.log(player.velX, "," ,player.velY)
-       ;
+    event.preventDefault()
+
+    console.log(player.velX, ",", player.velY);
 }
 
 function handleKeyReleased(event) {
@@ -167,31 +260,32 @@ function createLights() {
     // DirectionalLight
     directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
     directionalLight.position.set(80, 150, 60);
-    directionalLight.target = 
-    scene.add(directionalLight);
+    directionalLight.target =
+        scene.add(directionalLight);
 
-    directionalLightHelper = new THREE.DirectionalLightHelper( directionalLight );    
-    scene.add( directionalLightHelper );
+    directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
+    scene.add(directionalLightHelper);
 
 }
 
-function jump (){
-    if(player.jump == true){
+function jump() {
+    if (player.jump == true) {
 
-        if(player.height >= 0 && player.height < 100){
+        if (player.height >= 0 && player.height < 100) {
             player.height += 1
             player.velY += 1
-        }else if (player.height > 100){
-            
+        } else if (player.height > 100) {
+
             player.jump = false
         }
     }
 
-    if(player.height)
-    console.log("player height:", player.height)
+    if (player.height)
+        console.log("player height:", player.height)
 
-    
+
 }
+
 function updateCharacter() {
 
     jump()
@@ -199,8 +293,8 @@ function updateCharacter() {
     bob.position.y += player.velY;
     bob.position.x += player.velX;
 
-    
-    if(bob.position.y > 0 ){
+
+    if (bob.position.y > 0) {
         bob.position.y -= grav
     }
 
@@ -211,8 +305,10 @@ function updateCharacter() {
 
 function animate() {
     updateCharacter()
-    renderer.render(scene,camera)
+    renderer.render(scene, camera)
     // render
-   requestAnimationFrame(animate);
-   
+    requestAnimationFrame(animate);
+
+   // penguin.rotation.y += Math.PI * 0.002
+
 }
