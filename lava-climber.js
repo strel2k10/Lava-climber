@@ -8,12 +8,16 @@ let hemisphereLight, directionalLight, directionalLightHelper;
 //Character
 let bob
 let penguin
+let boundaryBox
 // Physics
-
+let floor = false
 //Platforms
 
 let platforms = []
 let platformObject
+
+//borders
+let borders=[]
 
 // Physics
 let player = {
@@ -76,11 +80,10 @@ function createScene() {
 
 
     // position the camera
-    camera.position.x = 60;
+    camera.position.x = 150;
     camera.position.z = 250; //ALTERED: change from Z=2000 to Z=200
     camera.position.y = 100;
-    camera.rotation.y = Math.PI * 2 * -0.05
-    camera.rotation.z = Math.PI * 2 * 0.007
+
 
     // create a render and set the size
     renderer = new THREE.WebGLRenderer();
@@ -107,7 +110,7 @@ function handleWindowResize() {
 
 function createCharacter() {
 
-    bob = new THREE.Object3D();
+ 
     penguin = new THREE.Object3D();
 
 
@@ -125,15 +128,6 @@ function createCharacter() {
         wireframe: false
     });
 
-    
-
-    let geomBody = new THREE.BoxGeometry(10, 10, 10)
-
-    let bodytest = new THREE.Mesh(geomBody, materialWhite);
-
-    bob.add(bodytest)
-    console.log("Bob created")
-    scene.add(bob)
 
     // tronco
     let geometryBody = new THREE.SphereGeometry(15, 32, 32);
@@ -242,9 +236,22 @@ function createCharacter() {
     body.add(foot1);
     body.add(foot2);
 
+    var lineMaterial = new THREE.LineBasicMaterial({
+        transparent: true,
+        opacity: 0.2
+    })
 
+    let geoBound = new THREE.BoxGeometry(46,65,25)
+    
+    boundaryBox = new THREE.Mesh(geoBound, lineMaterial)
 
+    boundaryBox.position.x = 50
+    boundaryBox.position.y = 37
 
+    penguin.add(boundaryBox)
+  
+
+    penguin.scale.set(0.25,0.25,0.25)
 
 
     scene.add(penguin)
@@ -276,7 +283,11 @@ class Platform{
         platformBody.position.y = this.y
         platformBody.position.x = this.x
 
+        borders.push(platformBody)
+        console.log("borders:" , borders)
         platformObject.add(platformBody)
+
+       
 
     }
 }
@@ -285,9 +296,9 @@ function createPlatforms(){
 
     platformObject = new THREE.Object3D;
 
-    platforms.push(new Platform(20,20,100,10))
+    platforms.push(new Platform(0,80,100,10))
 
-    platforms.push(new Platform(5,40,50,10))
+    platforms.push(new Platform(0,40,100,10))
 
     platforms.forEach(function(platform){
         platform.create()
@@ -295,6 +306,8 @@ function createPlatforms(){
 
 
     scene.add(platformObject)
+
+
 }
 
 
@@ -307,19 +320,49 @@ var keys = []
 
 function handleKeyPressed(event) {
 
+    let oldPos = penguin.position.clone();
+
     //store an entry for every key pressed
     keys[event.keyCode] = true;
 
     //Right
     if(keys[39]){
-        player.velX = 1
-        penguin.rotation.y = Math.PI / 2 * 0.7
+
+       
+        
+        penguin.rotation.y = Math.PI / 2 * 1.3
+        penguin.position.z = 10
+        //penguin.position.x +=5
+          
+              
+           
+                player.velX = 1
+
+                if(checkBoundaries()){
+                    penguin.position.x = oldPos.x
+                }
+            
+        
+            
+
        
        }
     //Left   
     else if(keys[37]){
-        player.velX = -1
-        penguin.rotation.y = - Math.PI / 2 * 0.7
+        
+        penguin.rotation.y = - Math.PI / 2 * 0.6
+        penguin.position.z = -10
+        //penguin.position.x -=5
+
+      
+        
+            player.velX = -1
+
+            if(checkBoundaries()){
+                penguin.position.x = oldPos.x
+            }
+        
+
        }
     //Up 
     if (keys[38]) {
@@ -372,16 +415,21 @@ function jump (){
     
     if(player.jump == true){
 
-        if(player.height >= 0 && player.height < 50){
-            player.height += 2
-            player.velY = 2
-        }else if (player.height > 100){
+        if (player.height > 100){
             
             player.jump = false
+
+        }else if(checkBoundaries()){
+            player.velY -=2
+            player.jump = false
+        }else{
+            player.velY = 2
+           
+            player.height += 2
         }
     }
 
-    if(player.height == 50 || player.jump == false){
+    if(player.jump == false){
         if(penguin.position.y == 0){
             player.height = 0
         }
@@ -391,14 +439,27 @@ function jump (){
 
 function updateCharacter() {
 
+    let oldPos = penguin.position.clone();
+
+
     jump()
+    
     // update the Character's position
+
     penguin.position.y += player.velY * speed;
     penguin.position.x += player.velX * speed;
 
-    
-    if(penguin.position.y > 0 ){
+    if(checkBoundaries() && player.jump == false){
+        floor = true
+    }else{
+        floor = false
+    }
+
+    // -----------------------Problems here-------------------------
+    if(penguin.position.y > 0  && floor === false){
         penguin.position.y -= grav * speed
+    }else if(floor === true){
+       penguin.position.y = oldPos.y
     }
   
 
@@ -407,9 +468,28 @@ function updateCharacter() {
   
 }
 
+function checkBoundaries(){
+    
+    let penguinBox = new THREE.Box3().setFromObject(penguin)
+    
+    for(let i = 0; i < borders.length;i++){
+
+        let borderBox = new THREE.Box3().setFromObject(borders[i])
+        let collision = penguinBox.intersectsBox(borderBox);
+        
+
+        if(collision){
+            console.log("Collision")
+            return true
+        }
+    }
+    return false
+}
+
 
 function animate() {
     updateCharacter()
+    
     renderer.render(scene, camera)
     // render
     requestAnimationFrame(animate);
