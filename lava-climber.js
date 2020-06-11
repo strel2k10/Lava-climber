@@ -21,7 +21,7 @@ let bob
 let penguin
 let centerMesh
 let boundaryBoxFront
-let boundaryBoxBack
+//let boundaryBoxBack
 let boundaryBoxTop
 let boundaryBoxBottom
 
@@ -47,7 +47,7 @@ let player = {
 }
 
 let grav = 1
-let speed = 2
+let speed = 1.5
 
 window.onload = function init() {
     createScene();
@@ -282,17 +282,18 @@ function createCharacter() {
   
     //Front Boundary Box
    
-    let geoBoundFront = new THREE.BoxGeometry(50,50,10)
+    let geoBoundFront = new THREE.BoxGeometry(50,60,10)
     
     boundaryBoxFront = new THREE.Mesh(geoBoundFront, lineMaterial)
 
     boundaryBoxFront.position.x = 50
-    boundaryBoxFront.position.y = 50
+    boundaryBoxFront.position.y = 40
     boundaryBoxFront.position.z = 10
 
 
     penguin.add(boundaryBoxFront)
 
+    /*
     // Back Boundary Box
 
     let geoBoundBack = new THREE.BoxGeometry(50,50,10)
@@ -306,7 +307,7 @@ function createCharacter() {
 
     penguin.add(boundaryBoxBack)
 
- 
+ */
  
     //Top Boundary Box
 
@@ -549,7 +550,7 @@ function jump (){
     
     if(player.jump == true){
 
-        if (player.height > 50){
+        if (player.height > 100){
             
             player.jump = false
 
@@ -628,7 +629,7 @@ function checkBoundariesFront(){
     }
     return false
 }
-
+/*
 function checkBoundariesBack(){
     
     let penguinBox = new THREE.Box3().setFromObject(boundaryBoxBack)
@@ -646,6 +647,7 @@ function checkBoundariesBack(){
     }
     return false
 }
+*/
 
 function checkBoundariesTop(){
     
