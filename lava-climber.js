@@ -8,7 +8,7 @@ let hemisphereLight, directionalLight, directionalLightHelper;
 let maps = []
 
 maps.push([
-    // 0- Empty 1- Platforms  2- Side Walls
+    // 0- Empty 1- Platforms  2-Walls
     [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
     [2,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,2],
     [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
