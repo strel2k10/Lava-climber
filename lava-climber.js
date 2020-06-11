@@ -4,11 +4,27 @@ let controls;
 
 //LIGHTS 
 let hemisphereLight, directionalLight, directionalLightHelper;
+//Map
+let maps = []
+
+maps.push([
+    
+    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+    [2,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,2],
+    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+    [2,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,2],
+    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2]
+    ])
 
 //Character
 let bob
 let penguin
-let boundaryBox
+let centerMesh
+let boundaryBoxFront
+let boundaryBoxBack
+let boundaryBoxTop
+let boundaryBoxBottom
+
 // Physics
 let floor = false
 //Platforms
@@ -16,6 +32,9 @@ let floor = false
 let platforms = []
 let platformObject
 
+//walls
+let walls = []
+let wallObject
 //borders
 let borders=[]
 
@@ -25,7 +44,6 @@ let player = {
     velY: 0,
     height: 0,
     jump: false
-
 }
 
 let grav = 1
@@ -33,9 +51,10 @@ let speed = 2
 
 window.onload = function init() {
     createScene();
-
+    mapDraw()
     createCharacter();
     createPlatforms();
+    createWalls();
     createLights()
 
 
@@ -44,6 +63,22 @@ window.onload = function init() {
     window.addEventListener('keydown', handleKeyPressed);
     window.addEventListener('keyup', handleKeyReleased);
    
+}
+
+function mapDraw(){
+    
+    maps[0].forEach(function(row,i){
+        
+        row.forEach(function(tile,j){
+            console.log("Im being called")
+            if(tile == 1){
+                console.log("Platform created")
+                platforms.push(new Platform(j*10,i*40))
+            }else if(tile == 2){
+                walls.push(new Wall(j*10,i*40))
+            }
+        })
+    })
 }
 /*
 function createScene() {
@@ -80,9 +115,10 @@ function createScene() {
 
 
     // position the camera
-    camera.position.x = 150;
-    camera.position.z = 250; //ALTERED: change from Z=2000 to Z=200
+    camera.position.x = 195;
+    camera.position.z = 170; //ALTERED: change from Z=2000 to Z=200
     camera.position.y = 100;
+
 
 
     // create a render and set the size
@@ -241,31 +277,142 @@ function createCharacter() {
         opacity: 0.2
     })
 
-    let geoBound = new THREE.BoxGeometry(46,65,25)
+
     
-    boundaryBox = new THREE.Mesh(geoBound, lineMaterial)
-
-    boundaryBox.position.x = 50
-    boundaryBox.position.y = 37
-
-    penguin.add(boundaryBox)
   
+    //Front Boundary Box
+   
+    let geoBoundFront = new THREE.BoxGeometry(50,50,10)
+    
+    boundaryBoxFront = new THREE.Mesh(geoBoundFront, lineMaterial)
 
+    boundaryBoxFront.position.x = 50
+    boundaryBoxFront.position.y = 50
+    boundaryBoxFront.position.z = 10
+
+
+    penguin.add(boundaryBoxFront)
+
+    // Back Boundary Box
+
+    let geoBoundBack = new THREE.BoxGeometry(50,50,10)
+    
+    boundaryBoxBack = new THREE.Mesh(geoBoundBack, lineMaterial)
+
+    boundaryBoxBack.position.x = 50
+    boundaryBoxBack.position.y = 50
+    boundaryBoxBack.position.z = -10
+
+
+    penguin.add(boundaryBoxBack)
+
+ 
+ 
+    //Top Boundary Box
+
+    let geoBoundTop = new THREE.BoxGeometry(10,10,10)
+    
+    boundaryBoxTop = new THREE.Mesh(geoBoundTop, lineMaterial)
+
+    boundaryBoxTop.position.x = 50
+    boundaryBoxTop.position.y = 75
+    //boundaryBoxTop.position.z = 0
+
+
+    penguin.add(boundaryBoxTop)
+
+    //Bottom Boundary Box
+
+    boundaryBoxBottom
+
+    let geoBoundBottom = new THREE.BoxGeometry(10,10,10)
+    
+    boundaryBoxBottom = new THREE.Mesh(geoBoundBottom, lineMaterial)
+
+    boundaryBoxBottom.position.x = 50
+    boundaryBoxBottom.position.y = 10
+    //boundaryBoxTop.position.z = 0
+
+
+    penguin.add(boundaryBoxBottom)
+ 
+    
+     
+ 
+ 
+     
+
+    
+
+  
+    
     penguin.scale.set(0.25,0.25,0.25)
 
+    //Centering Penguin so that it can rotate around itself
 
-    scene.add(penguin)
+    let box = new THREE.Box3().setFromObject(penguin)
+   
+    box.center(penguin.position)
+ 
+    penguin.position.multiplyScalar(-1)
+    
+    bob = new THREE.Group();
+
+    bob.add(penguin)
+
+
+    bob.position.y = 25
+    bob.position.x = 100
+
+
+    scene.add(bob)
+    
 
 }
 
+class Wall{
+    constructor(x,y){
+        this.x = x
+        this.y = y
+    }
+    create(){
+                  
+        const materialWhite = new THREE.MeshPhongMaterial({
+            color: 0xd8d0d1,
+            wireframe: false
+        });
+
+        let geomBody = new THREE.BoxGeometry(11, 50, 10)
+
+        let wallBody = new THREE.Mesh(geomBody, materialWhite);
+
+        wallBody.position.y = this.y
+        wallBody.position.x = this.x
+
+        borders.push(wallBody)
+        console.log("borders:" , borders)
+        wallObject.add(wallBody)
+
+       
+    }
+}
+
+function createWalls(){
+    wallObject = new THREE.Object3D;
+
+    walls.forEach(function(wall){
+        wall.create()
+    })
+
+
+    scene.add(wallObject)
+}
+
 class Platform{
-    constructor(x,y,width,height){
+    constructor(x,y){
 
         this.x = x
         this.y = y
-        this.width = width
-        this.height = height
-
     }
 
     create(){       
@@ -276,7 +423,7 @@ class Platform{
             wireframe: false
         });
 
-        let geomBody = new THREE.BoxGeometry(this.width, this.height, 10)
+        let geomBody = new THREE.BoxGeometry(11, 10, 10)
 
         let platformBody = new THREE.Mesh(geomBody, materialWhite);
 
@@ -294,11 +441,8 @@ class Platform{
 
 function createPlatforms(){
 
+    
     platformObject = new THREE.Object3D;
-
-    platforms.push(new Platform(0,80,100,10))
-
-    platforms.push(new Platform(0,40,100,10))
 
     platforms.forEach(function(platform){
         platform.create()
@@ -320,7 +464,7 @@ var keys = []
 
 function handleKeyPressed(event) {
 
-    let oldPos = penguin.position.clone();
+    let oldPos = bob.position.clone();
 
     //store an entry for every key pressed
     keys[event.keyCode] = true;
@@ -330,37 +474,27 @@ function handleKeyPressed(event) {
 
        
         
-        penguin.rotation.y = Math.PI / 2 * 1.3
-        penguin.position.z = 10
-        //penguin.position.x +=5
-          
-              
-           
-                player.velX = 1
-
-                if(checkBoundaries()){
-                    penguin.position.x = oldPos.x
-                }
-            
+        bob.rotation.y = Math.PI / 2 
         
-            
-
-       
+        //penguin.position.z = 10
+        //penguin.position.x +=5
+              
+                player.velX = 1
+              
+                
        }
     //Left   
     else if(keys[37]){
         
-        penguin.rotation.y = - Math.PI / 2 * 0.6
-        penguin.position.z = -10
+        bob.rotation.y = - Math.PI / 2
+ 
+        //penguin.position.z = -10
         //penguin.position.x -=5
-
       
-        
             player.velX = -1
-
-            if(checkBoundaries()){
-                penguin.position.x = oldPos.x
-            }
+        
+            
+         
         
 
        }
@@ -415,52 +549,61 @@ function jump (){
     
     if(player.jump == true){
 
-        if (player.height > 100){
+        if (player.height > 50){
             
             player.jump = false
 
-        }else if(checkBoundaries()){
-            player.velY -=2
+        }else if(checkBoundariesTop()){
+
+            player.velY -=1
             player.jump = false
+
         }else{
             player.velY = 2
-           
+         
             player.height += 2
         }
     }
 
     if(player.jump == false){
-        if(penguin.position.y == 0){
+        if(penguin.position.y == 0 || checkFloor()){
             player.height = 0
+            
         }
     }
 
 }
 
-function updateCharacter() {
-
-    let oldPos = penguin.position.clone();
+function updateCharacter(oldPos) {
 
 
-    jump()
     
-    // update the Character's position
-
-    penguin.position.y += player.velY * speed;
-    penguin.position.x += player.velX * speed;
-
-    if(checkBoundaries() && player.jump == false){
+    if(checkFloor() && player.jump == false){
         floor = true
     }else{
         floor = false
     }
 
-    // -----------------------Problems here-------------------------
-    if(penguin.position.y > 0  && floor === false){
-        penguin.position.y -= grav * speed
+   
+    if(bob.position.y > 0  && floor === false){
+        bob.position.y -= grav * speed
     }else if(floor === true){
-       penguin.position.y = oldPos.y
+       bob.position.y = oldPos.y
     }
+
+    jump()
+    
+    // update the Character's position
+
+    if(!checkBoundariesFront()){
+        bob.position.x += player.velX * speed;
+    }
+        
+    
+
+    bob.position.y += player.velY * speed;
+   
+
   
 
     player.velY = 0
@@ -468,9 +611,9 @@ function updateCharacter() {
   
 }
 
-function checkBoundaries(){
+function checkBoundariesFront(){
     
-    let penguinBox = new THREE.Box3().setFromObject(penguin)
+    let penguinBox = new THREE.Box3().setFromObject(boundaryBoxFront)
     
     for(let i = 0; i < borders.length;i++){
 
@@ -479,7 +622,60 @@ function checkBoundaries(){
         
 
         if(collision){
-            console.log("Collision")
+      
+            return true
+        }
+    }
+    return false
+}
+
+function checkBoundariesBack(){
+    
+    let penguinBox = new THREE.Box3().setFromObject(boundaryBoxBack)
+    
+    for(let i = 0; i < borders.length;i++){
+
+        let borderBox = new THREE.Box3().setFromObject(borders[i])
+        let collision = penguinBox.intersectsBox(borderBox);
+        
+
+        if(collision){
+      
+            return true
+        }
+    }
+    return false
+}
+
+function checkBoundariesTop(){
+    
+    let penguinBox = new THREE.Box3().setFromObject(boundaryBoxTop)
+    
+    for(let i = 0; i < borders.length;i++){
+
+        let borderBox = new THREE.Box3().setFromObject(borders[i])
+        let collision = penguinBox.intersectsBox(borderBox);
+        
+
+        if(collision){
+      
+            return true
+        }
+    }
+    return false
+}
+
+function checkFloor(){
+    let penguinBox = new THREE.Box3().setFromObject(boundaryBoxBottom)
+
+    for(let i = 0; i < borders.length;i++){
+
+        let borderBox = new THREE.Box3().setFromObject(borders[i])
+        let collision = penguinBox.intersectsBox(borderBox);
+        
+
+        if(collision){
+         
             return true
         }
     }
@@ -488,7 +684,10 @@ function checkBoundaries(){
 
 
 function animate() {
-    updateCharacter()
+
+    let oldPos = bob.position.clone();
+
+    updateCharacter(oldPos)
     
     renderer.render(scene, camera)
     // render
