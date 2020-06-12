@@ -9,18 +9,19 @@ let maps = []
 
 maps.push([
     // 0- Empty 1- Platforms  2-Walls
-    [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
-    [2,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,2],
-    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
-    [2,0,0,1,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,2],
-    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2]
-    ])
+    [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+    [2, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2],
+    [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+    [2, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 2],
+    [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]
+])
 
 //Character
 let bob
 let penguin
 let centerMesh
 let boundaryBoxFront
+let idle
 //let boundaryBoxBack
 let boundaryBoxTop
 let boundaryBoxBottom
@@ -36,7 +37,7 @@ let platformObject
 let walls = []
 let wallObject
 //borders
-let borders=[]
+let borders = []
 
 // Physics
 let player = {
@@ -56,26 +57,26 @@ window.onload = function init() {
     createPlatforms();
     createWalls();
     createLights()
-
+   
 
 
     animate();
     window.addEventListener('keydown', handleKeyPressed);
     window.addEventListener('keyup', handleKeyReleased);
-   
+
 }
 
-function mapDraw(){
-    
-    maps[0].forEach(function(row,i){
-        
-        row.forEach(function(tile,j){
+function mapDraw() {
+
+    maps[0].forEach(function (row, i) {
+
+        row.forEach(function (tile, j) {
             console.log("Im being called")
-            if(tile == 1){
+            if (tile == 1) {
                 console.log("Platform created")
-                platforms.push(new Platform(j*10,i*40))
-            }else if(tile == 2){
-                walls.push(new Wall(j*10,i*40))
+                platforms.push(new Platform(j * 10, i * 40))
+            } else if (tile == 2) {
+                walls.push(new Wall(j * 10, i * 40))
             }
         })
     })
@@ -120,7 +121,6 @@ function createScene() {
     camera.position.y = 100;
 
 
-
     // create a render and set the size
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -146,7 +146,7 @@ function handleWindowResize() {
 
 function createCharacter() {
 
- 
+
     penguin = new THREE.Object3D();
 
 
@@ -230,7 +230,7 @@ function createCharacter() {
 
     // beak
 
-    let geometryBeak = new THREE.CylinderGeometry(0, 5, 10, 4, 1)    
+    let geometryBeak = new THREE.CylinderGeometry(0, 5, 10, 4, 1)
     let beak = new THREE.Mesh(geometryBeak, materialOrange);
     beak.position.y = -1
     beak.position.z = 10
@@ -244,12 +244,12 @@ function createCharacter() {
     let geometryHands = new THREE.CylinderGeometry(0.5, 8, 20, 4, 1)
     let hand1 = new THREE.Mesh(geometryHands, materialBlack);
     let hand2 = new THREE.Mesh(geometryHands, materialBlack);
-    hand1.rotation.z = 27* Math.PI / 20
+    hand1.rotation.z = 27 * Math.PI / 20
     hand1.position.x = 13.5
     hand1.position.y = 1.10
 
-    hand2.rotation.z = - 27* Math.PI / 20
-    hand2.position.x = - 13.5
+    hand2.rotation.z = -27 * Math.PI / 20
+    hand2.position.x = -13.5
     hand2.position.y = 1.10
 
     body.add(hand1);
@@ -261,13 +261,13 @@ function createCharacter() {
     let geometryFeet = new THREE.CylinderGeometry(0.5, 6, 12, 4, 1)
     let foot1 = new THREE.Mesh(geometryFeet, materialOrange);
     let foot2 = new THREE.Mesh(geometryFeet, materialOrange);
-    foot1.rotation.z = 27* Math.PI / 20
+    foot1.rotation.z = 27 * Math.PI / 20
     foot1.position.x = 10
-    foot1.position.y = - 13
+    foot1.position.y = -13
 
-    foot2.rotation.z = - 27* Math.PI / 20
-    foot2.position.x = - 10
-    foot2.position.y = - 13
+    foot2.rotation.z = -27 * Math.PI / 20
+    foot2.position.x = -10
+    foot2.position.y = -13
 
     body.add(foot1);
     body.add(foot2);
@@ -278,12 +278,12 @@ function createCharacter() {
     })
 
 
-    
-  
+
+
     //Front Boundary Box
-   
-    let geoBoundFront = new THREE.BoxGeometry(50,60,10)
-    
+
+    let geoBoundFront = new THREE.BoxGeometry(50, 60, 10)
+
     boundaryBoxFront = new THREE.Mesh(geoBoundFront, lineMaterial)
 
     boundaryBoxFront.position.x = 50
@@ -308,11 +308,11 @@ function createCharacter() {
     penguin.add(boundaryBoxBack)
 
  */
- 
+
     //Top Boundary Box
 
-    let geoBoundTop = new THREE.BoxGeometry(10,10,10)
-    
+    let geoBoundTop = new THREE.BoxGeometry(10, 10, 10)
+
     boundaryBoxTop = new THREE.Mesh(geoBoundTop, lineMaterial)
 
     boundaryBoxTop.position.x = 50
@@ -326,8 +326,8 @@ function createCharacter() {
 
     boundaryBoxBottom
 
-    let geoBoundBottom = new THREE.BoxGeometry(10,10,10)
-    
+    let geoBoundBottom = new THREE.BoxGeometry(10, 10, 10)
+
     boundaryBoxBottom = new THREE.Mesh(geoBoundBottom, lineMaterial)
 
     boundaryBoxBottom.position.x = 50
@@ -336,27 +336,27 @@ function createCharacter() {
 
 
     penguin.add(boundaryBoxBottom)
- 
-    
-     
- 
- 
-     
 
-    
 
-  
-    
-    penguin.scale.set(0.5,0.5,0.5)
+
+
+
+
+
+
+
+
+
+    penguin.scale.set(0.5, 0.5, 0.5)
 
     //Centering Penguin so that it can rotate around itself
 
     let box = new THREE.Box3().setFromObject(penguin)
-   
+
     box.center(penguin.position)
- 
+
     penguin.position.multiplyScalar(-1)
-    
+
     bob = new THREE.Group();
 
     bob.add(penguin)
@@ -367,17 +367,17 @@ function createCharacter() {
 
 
     scene.add(bob)
-    
+
 
 }
 
-class Wall{
-    constructor(x,y){
+class Wall {
+    constructor(x, y) {
         this.x = x
         this.y = y
     }
-    create(){
-                  
+    create() {
+
         const materialWhite = new THREE.MeshPhongMaterial({
             color: 0xd8d0d1,
             wireframe: false
@@ -391,17 +391,17 @@ class Wall{
         wallBody.position.x = this.x
 
         borders.push(wallBody)
-        console.log("borders:" , borders)
+        console.log("borders:", borders)
         wallObject.add(wallBody)
 
-       
+
     }
 }
 
-function createWalls(){
+function createWalls() {
     wallObject = new THREE.Object3D;
 
-    walls.forEach(function(wall){
+    walls.forEach(function (wall) {
         wall.create()
     })
 
@@ -409,16 +409,16 @@ function createWalls(){
     scene.add(wallObject)
 }
 
-class Platform{
-    constructor(x,y){
+class Platform {
+    constructor(x, y) {
 
         this.x = x
         this.y = y
     }
 
-    create(){       
+    create() {
 
-            
+
         const materialWhite = new THREE.MeshPhongMaterial({
             color: 0xd8d0d1,
             wireframe: false
@@ -432,20 +432,20 @@ class Platform{
         platformBody.position.x = this.x
 
         borders.push(platformBody)
-        console.log("borders:" , borders)
+        console.log("borders:", borders)
         platformObject.add(platformBody)
 
-       
+
 
     }
 }
 
-function createPlatforms(){
+function createPlatforms() {
 
-    
+
     platformObject = new THREE.Object3D;
 
-    platforms.forEach(function(platform){
+    platforms.forEach(function (platform) {
         platform.create()
     })
 
@@ -471,64 +471,67 @@ function handleKeyPressed(event) {
     keys[event.keyCode] = true;
 
     //Right
-    if(keys[39]){
+    if (keys[39]) {
+        idle = false;
 
-       
-        
-        bob.rotation.y = Math.PI / 2 
-        
+        bob.rotation.y = Math.PI / 2
+
         //penguin.position.z = 10
         //penguin.position.x +=5
-              
-                player.velX = 1
-              
-                
-       }
+
+        player.velX = 1
+
+
+    }
     //Left   
-    else if(keys[37]){
-        
-        bob.rotation.y = - Math.PI / 2
- 
+    else if (keys[37]) {
+        idle = false;
+
+        bob.rotation.y = -Math.PI / 2
+
         //penguin.position.z = -10
         //penguin.position.x -=5
-      
-            player.velX = -1
-        
-            
-         
-        
 
-       }
+        player.velX = -1
+
+
+
+
+
+    }
     //Up 
     if (keys[38]) {
+        idle = false
         if (player.height == 0) {
             player.jump = true
         }
 
     }
 
-    
 
-       event.preventDefault()
-       
-      
+
+    event.preventDefault()
+
+
 }
 
 function handleKeyReleased(event) {
 
     //Mark keys that were released
     keys[event.keyCode] = false
-   
-    if(event.keyCode == 39 || event.keyCode == 37){
+
+    if (event.keyCode == 39 || event.keyCode == 37) {
         player.velX = 0
         bob.rotation.y = 0
+        idle = true
     }
-   
-    if(event.keyCode == 38){
+
+    if (event.keyCode == 38) {
         player.jump = false
+        idle = true
     }
     event.preventDefault()
-        
+
 }
 
 function createLights() {
@@ -546,47 +549,49 @@ function createLights() {
     scene.add(directionalLightHelper);
 
 }
+
 function jumpStart() {
-    penguin.children[0].children[4].rotation.z = 7*Math.PI/6
-    penguin.children[0].children[5].rotation.z = - 7*Math.PI/6
-    
+    penguin.children[0].children[4].rotation.z = 7 * Math.PI / 6
+    penguin.children[0].children[5].rotation.z = -7 * Math.PI / 6
+
 }
-function jumpMiddle(){
-    penguin.children[0].children[2].rotation.z = - Math.PI / 2
+
+function jumpMiddle() {
+    penguin.children[0].children[2].rotation.z = -Math.PI / 2
     penguin.children[0].children[3].rotation.z = Math.PI / 2
     penguin.children[0].children[1].rotation.x = Math.PI / 14
 }
+
 function jumpEnd() {
-    penguin.children[0].children[4].rotation.z = 27* Math.PI / 20
-    penguin.children[0].children[5].rotation.z = - 27* Math.PI / 20
-    penguin.children[0].children[2].rotation.z = 27* Math.PI / 20
-    penguin.children[0].children[3].rotation.z = - 27* Math.PI / 20
+    penguin.children[0].children[4].rotation.z = 27 * Math.PI / 20
+    penguin.children[0].children[5].rotation.z = -27 * Math.PI / 20
+    penguin.children[0].children[2].rotation.z = 27 * Math.PI / 20
+    penguin.children[0].children[3].rotation.z = -27 * Math.PI / 20
     penguin.children[0].children[1].rotation.x = 0
 }
 
-function jump (){
-    
-    if(player.jump == true){
+function jump() {
+
+    if (player.jump == true) {
         jumpStart()
-        if (player.height > 100){            
-            player.jump = false
-            
-        }else if(checkBoundariesTop()){            
-            player.velY -=1
+        if (player.height > 100) {
             player.jump = false
 
-        }else{            
-            player.velY = 2            
+        } else if (checkBoundariesTop()) {
+            player.velY -= 1
+            player.jump = false
+
+        } else {
+            player.velY = 2
             player.height += 2
         }
     }
 
-    if(player.jump == false){
-        if(penguin.position.y == 0 || checkFloor()){
+    if (player.jump == false) {
+        if (penguin.position.y == 0 || checkFloor()) {
             player.height = 0
-            
-        }
-        else {
+
+        } else {
             jumpMiddle()
         }
     }
@@ -596,74 +601,73 @@ function jump (){
 function updateCharacter(oldPos) {
 
 
-    
-    if(checkFloor() && player.jump == false){
+   
+    if (checkFloor() && player.jump == false) {
         floor = true
-    }else{
+    } else {
         floor = false
     }
 
-   
-    if(bob.position.y > 0  && floor === false){
+
+    if (bob.position.y > 0 && floor === false) {
         bob.position.y -= grav * speed
-        
-    }else if(floor === true){
-       bob.position.y = oldPos.y
-       jumpEnd()
+
+    } else if (floor === true) {
+        bob.position.y = oldPos.y
+        jumpEnd()
     }
 
     jump()
-    
+
     // update the Character's position
 
-    if(!checkBoundariesFront()){
+    if (!checkBoundariesFront()) {
         bob.position.x += player.velX * speed;
     }
-        
-    
+
+
 
     bob.position.y += player.velY * speed;
-   
 
-  
+
+
 
     player.velY = 0
 
-  
+
 }
 /*
-function idleLogout() {
-    var t;
-    window.onload = resetTimer;
-    window.onmousemove = resetTimer;
-    window.onkeypress = resetTimer;   
-    window.addEventListener('scroll', resetTimer, true);
-
-    function yourFunction() {
-        // your function for too long inactivity goes here
-        // e.g. window.location.href = 'logout.php';
+function idleAnimation() {
+    if (idle = false) {
+        console.log("saido")        
+        penguin.children[0].rotation.z = 0;
     }
-
-    function resetTimer() {
-        clearTimeout(t);
-        t = setTimeout(yourFunction, 10000);  // time is in milliseconds
+    else if (idle = true || penguin.children[0].rotation.z <= Math.PI/6) {
+        penguin.children[0].rotation.z += Math.PI * 0.002;
     }
+    else if (idle = true || penguin.children[0].rotation.z >= Math.PI/6) {
+        penguin.children[0].rotation.z += Math.PI * 0.002;
+    }
+  
+   
 }
-idleLogout();
 */
 
-function checkBoundariesFront(){
-    
+
+
+
+function checkBoundariesFront() {
+
     let penguinBox = new THREE.Box3().setFromObject(boundaryBoxFront)
-    
-    for(let i = 0; i < borders.length;i++){
+
+    for (let i = 0; i < borders.length; i++) {
 
         let borderBox = new THREE.Box3().setFromObject(borders[i])
         let collision = penguinBox.intersectsBox(borderBox);
-        
 
-        if(collision){
-      
+
+        if (collision) {
+
             return true
         }
     }
@@ -689,35 +693,35 @@ function checkBoundariesBack(){
 }
 */
 
-function checkBoundariesTop(){
-    
+function checkBoundariesTop() {
+
     let penguinBox = new THREE.Box3().setFromObject(boundaryBoxTop)
-    
-    for(let i = 0; i < borders.length;i++){
+
+    for (let i = 0; i < borders.length; i++) {
 
         let borderBox = new THREE.Box3().setFromObject(borders[i])
         let collision = penguinBox.intersectsBox(borderBox);
-        
 
-        if(collision){
-      
+
+        if (collision) {
+
             return true
         }
     }
     return false
 }
 
-function checkFloor(){
+function checkFloor() {
     let penguinBox = new THREE.Box3().setFromObject(boundaryBoxBottom)
 
-    for(let i = 0; i < borders.length;i++){
+    for (let i = 0; i < borders.length; i++) {
 
         let borderBox = new THREE.Box3().setFromObject(borders[i])
         let collision = penguinBox.intersectsBox(borderBox);
-        
 
-        if(collision){
-         
+
+        if (collision) {
+
             return true
         }
     }
@@ -730,11 +734,12 @@ function animate() {
     let oldPos = bob.position.clone();
 
     updateCharacter(oldPos)
-    
+  // idleAnimation()
     renderer.render(scene, camera)
+
     // render
     requestAnimationFrame(animate);
 
-   // penguin.rotation.y += Math.PI * 0.002
+    // penguin.rotation.y += Math.PI * 0.002
 
 }
