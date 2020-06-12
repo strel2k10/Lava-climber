@@ -9,12 +9,29 @@ let maps = []
 
 maps.push([
     // 0- Empty 1- Platforms  2-Walls
-    [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
-    [2, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
-    [2, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 2],
-    [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]
-])
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,2,2],
+    [2,2,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,2,2],
+    [2,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    ])
 
 //Character
 let bob
@@ -22,14 +39,18 @@ let penguin
 let centerMesh
 let boundaryBoxFront
 let idle
+
+//lava
+let lava
+
 //let boundaryBoxBack
 let boundaryBoxTop
 let boundaryBoxBottom
 
 // Physics
 let floor = false
-//Platforms
 
+//Platforms
 let platforms = []
 let platformObject
 
@@ -48,7 +69,7 @@ let player = {
 }
 
 let grav = 1
-let speed = 0.9
+let speed = 1.5
 
 window.onload = function init() {
     createScene();
@@ -56,6 +77,7 @@ window.onload = function init() {
     createCharacter();
     createPlatforms();
     createWalls();
+    createLava();
     createLights()
    
 
@@ -116,9 +138,10 @@ function createScene() {
 
 
     // position the camera
-    camera.position.x = 195;
-    camera.position.z = 170; //ALTERED: change from Z=2000 to Z=200
-    camera.position.y = 100;
+    camera.position.x = 100
+ 
+    camera.position.z = 150; //ALTERED: change from Z=2000 to Z=200
+  
 
 
     // create a render and set the size
@@ -274,16 +297,16 @@ function createCharacter() {
 
     var lineMaterial = new THREE.LineBasicMaterial({
         transparent: true,
-        opacity: 0.2
+       opacity: 0
     })
 
 
 
 
     //Front Boundary Box
-
-    let geoBoundFront = new THREE.BoxGeometry(50, 60, 10)
-
+   
+    let geoBoundFront = new THREE.BoxGeometry(50,55,10)
+    
     boundaryBoxFront = new THREE.Mesh(geoBoundFront, lineMaterial)
 
     boundaryBoxFront.position.x = 50
@@ -361,9 +384,14 @@ function createCharacter() {
 
     bob.add(penguin)
 
+    var axesHelper = new THREE.AxesHelper(4);
+    scene.add( axesHelper );
 
-    bob.position.y = 25
+    
+
+    bob.position.y = 150
     bob.position.x = 100
+
 
 
     scene.add(bob)
@@ -383,7 +411,7 @@ class Wall {
             wireframe: false
         });
 
-        let geomBody = new THREE.BoxGeometry(11, 50, 10)
+        let geomBody = new THREE.BoxGeometry(11, 50, 200)
 
         let wallBody = new THREE.Mesh(geomBody, materialWhite);
 
@@ -391,14 +419,39 @@ class Wall {
         wallBody.position.x = this.x
 
         borders.push(wallBody)
-        console.log("borders:", borders)
+        console.log("borders:" , borders)
+        wallBody.position.z = 75
         wallObject.add(wallBody)
 
 
     }
 }
 
-function createWalls() {
+function createLava(){
+
+    const materialLava = new THREE.MeshPhongMaterial({
+        color: 0xFF5B33,
+        wireframe: false,
+        transparent: true,
+        opacity: 0.8,
+    });
+
+    let lavaBody = new THREE.BoxGeometry(1000,100,200)
+
+    lava = new THREE.Mesh(lavaBody, materialLava)
+    lava.position.z = 50
+    lava.position.y = -100
+
+    scene.add(lava)
+
+}
+
+function createText(){
+
+}
+
+
+function createWalls(){
     wallObject = new THREE.Object3D;
 
     walls.forEach(function (wall) {
@@ -424,12 +477,14 @@ class Platform {
             wireframe: false
         });
 
-        let geomBody = new THREE.BoxGeometry(11, 10, 10)
+        let geomBody = new THREE.BoxGeometry(11, 10, 50)
 
         let platformBody = new THREE.Mesh(geomBody, materialWhite);
 
         platformBody.position.y = this.y
         platformBody.position.x = this.x
+
+        platformBody.position.z = -10
 
         borders.push(platformBody)
         console.log("borders:", borders)
@@ -501,8 +556,8 @@ function handleKeyPressed(event) {
     }
     //Up 
     if (keys[38]) {
-        idle = false
-        if (player.height == 0) {
+        idle = false;
+        if (player.height == 0 && floor === true) {
             player.jump = true
         }
 
@@ -728,17 +783,75 @@ function checkFloor() {
     return false
 }
 
+function lavaCollision(id){
+    let penguinBox = new THREE.Box3().setFromObject(penguin.children[0].children[0])
 
+  
+
+        let borderBox = new THREE.Box3().setFromObject(lava)
+        let collision = penguinBox.intersectsBox(borderBox);
+        
+
+        if(collision){
+
+            console.log("game over")
+            createGameOver()
+            cancelAnimationFrame(id)
+            return true
+        }else{
+            return false
+        }
+        
+}
+
+function createGameOver(){
+
+   alert("Game over!")
+    /*
+
+    loader.load( 'fonts/helvetiker_bold.typeface.json', function ( font ) {
+
+	var geometry = new THREE.TextGeometry( 'Hello three.js!', {
+		font: font,
+		size: 80,
+		height: 5,
+		curveSegments: 12,
+		bevelEnabled: true,
+		bevelThickness: 10,
+		bevelSize: 8,
+		bevelOffset: 0,
+		bevelSegments: 5
+    } );
+    
+    scene.add(geometry)
+});
+*/
+
+    
+
+   
+
+    
+}
 function animate() {
 
     let oldPos = bob.position.clone();
 
+    lava.position.y += 0.2
+    //camera.position.x = bob.position.x + 100;
+    camera.position.y = bob.position.y + 20;
+
+    camera.lookAt(bob.position)
+
     updateCharacter(oldPos)
   // idleAnimation()
+    
     renderer.render(scene, camera)
 
     // render
-    requestAnimationFrame(animate);
+   let id =  requestAnimationFrame(animate);
+
+   lavaCollision(id)
 
     // penguin.rotation.y += Math.PI * 0.002
 
