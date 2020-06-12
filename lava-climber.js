@@ -47,7 +47,7 @@ let player = {
 }
 
 let grav = 1
-let speed = 1.5
+let speed = 0.9
 
 window.onload = function init() {
     createScene();
@@ -242,8 +242,8 @@ function createCharacter() {
     // hands
 
     let geometryHands = new THREE.CylinderGeometry(0.5, 8, 20, 4, 1)
-    let hand1 = new THREE.Mesh(geometryHands, materialOrange);
-    let hand2 = new THREE.Mesh(geometryHands, materialOrange);
+    let hand1 = new THREE.Mesh(geometryHands, materialBlack);
+    let hand2 = new THREE.Mesh(geometryHands, materialBlack);
     hand1.rotation.z = 27* Math.PI / 20
     hand1.position.x = 13.5
     hand1.position.y = 1.10
@@ -347,7 +347,7 @@ function createCharacter() {
 
   
     
-    penguin.scale.set(0.25,0.25,0.25)
+    penguin.scale.set(0.5,0.5,0.5)
 
     //Centering Penguin so that it can rotate around itself
 
@@ -521,6 +521,7 @@ function handleKeyReleased(event) {
    
     if(event.keyCode == 39 || event.keyCode == 37){
         player.velX = 0
+        bob.rotation.y = 0
     }
    
     if(event.keyCode == 38){
@@ -545,23 +546,37 @@ function createLights() {
     scene.add(directionalLightHelper);
 
 }
+function jumpStart() {
+    penguin.children[0].children[4].rotation.z = 7*Math.PI/6
+    penguin.children[0].children[5].rotation.z = - 7*Math.PI/6
+    
+}
+function jumpMiddle(){
+    penguin.children[0].children[2].rotation.z = - Math.PI / 2
+    penguin.children[0].children[3].rotation.z = Math.PI / 2
+    penguin.children[0].children[1].rotation.x = Math.PI / 14
+}
+function jumpEnd() {
+    penguin.children[0].children[4].rotation.z = 27* Math.PI / 20
+    penguin.children[0].children[5].rotation.z = - 27* Math.PI / 20
+    penguin.children[0].children[2].rotation.z = 27* Math.PI / 20
+    penguin.children[0].children[3].rotation.z = - 27* Math.PI / 20
+    penguin.children[0].children[1].rotation.x = 0
+}
 
 function jump (){
     
     if(player.jump == true){
-
-        if (player.height > 100){
-            
+        jumpStart()
+        if (player.height > 100){            
             player.jump = false
-
-        }else if(checkBoundariesTop()){
-
+            
+        }else if(checkBoundariesTop()){            
             player.velY -=1
             player.jump = false
 
-        }else{
-            player.velY = 2
-         
+        }else{            
+            player.velY = 2            
             player.height += 2
         }
     }
@@ -570,6 +585,9 @@ function jump (){
         if(penguin.position.y == 0 || checkFloor()){
             player.height = 0
             
+        }
+        else {
+            jumpMiddle()
         }
     }
 
@@ -588,8 +606,10 @@ function updateCharacter(oldPos) {
    
     if(bob.position.y > 0  && floor === false){
         bob.position.y -= grav * speed
+        
     }else if(floor === true){
        bob.position.y = oldPos.y
+       jumpEnd()
     }
 
     jump()
@@ -611,6 +631,26 @@ function updateCharacter(oldPos) {
 
   
 }
+/*
+function idleLogout() {
+    var t;
+    window.onload = resetTimer;
+    window.onmousemove = resetTimer;
+    window.onkeypress = resetTimer;   
+    window.addEventListener('scroll', resetTimer, true);
+
+    function yourFunction() {
+        // your function for too long inactivity goes here
+        // e.g. window.location.href = 'logout.php';
+    }
+
+    function resetTimer() {
+        clearTimeout(t);
+        t = setTimeout(yourFunction, 10000);  // time is in milliseconds
+    }
+}
+idleLogout();
+*/
 
 function checkBoundariesFront(){
     
