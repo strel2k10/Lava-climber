@@ -8,21 +8,21 @@ let hemisphereLight, directionalLight, directionalLightHelper;
 let maps = []
 
 maps.push([
-    // 0- Empty 1- Platforms  2-Walls
+    // 0- Empty 1- Platforms  2-Walls  3- Platforms with powerups 4- platforms with end game
     [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
     [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
     [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
     [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
     [2,2,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,2,2],
-    [2,2,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,0,0,0,3,1,3,0,0,0,0,2,2],
+    [2,2,0,0,1,3,1,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
     [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,3,3,0,0,0,0,0,0,0,0,2,2],
     [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,2,2],
     [2,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
     [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
     [2,2,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,2,2],
+    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,4,0,2,2],
     [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
     [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
     [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
@@ -57,19 +57,36 @@ let platformObject
 //walls
 let walls = []
 let wallObject
+
 //borders
 let borders = []
+
+//End body
+let ends = []
+let endBorders = []
+let endObject
+
+//PowerUp
+let powerUps = []
+let powerUpBorders = []
+let powerUpObject
+let powerUpHeight = 0
+let powerUpDirection = 0
+let jumpPowerUpCounter = 0
 
 // Physics
 let player = {
     velX: 0,
     velY: 0,
     height: 0,
-    jump: false
+    jump: false,
+    powerUp: false,
 }
 
+heightLimit = 100
+
 let grav = 1
-let speed = 1.5
+let speed = 2
 
 window.onload = function init() {
     createScene();
@@ -78,7 +95,9 @@ window.onload = function init() {
     createPlatforms();
     createWalls();
     createLava();
-    createLights()
+    createEnd();
+    createPowerUp();
+    createLights();
    
 
 
@@ -95,10 +114,23 @@ function mapDraw() {
         row.forEach(function (tile, j) {
             console.log("Im being called")
             if (tile == 1) {
+
                 console.log("Platform created")
                 platforms.push(new Platform(j * 10, i * 40))
+
             } else if (tile == 2) {
+
                 walls.push(new Wall(j * 10, i * 40))
+            }else if(tile == 3){
+
+                platforms.push(new Platform(j*10,i*40))
+                powerUps.push(new PowerUp(j*10,i*40))
+            
+            } else if(tile == 4){
+                //platforms.push(new Platform(j*10, i*40))
+                ends.push(new End(j*10,i*40))
+               
+
             }
         })
     })
@@ -399,6 +431,88 @@ function createCharacter() {
 
 }
 
+class PowerUp{
+    constructor(x,y){
+        this.x = x
+        this.y = y
+    }
+    create(){
+        
+        const materialWhite = new THREE.MeshPhongMaterial({
+            color: 0xd8d0d1,
+            wireframe: false
+        });
+
+        let powerUpGeo = new THREE.BoxGeometry(10,10,10)
+        let powerUpBody = new THREE.Mesh(powerUpGeo,materialWhite);
+
+        powerUpBody.position.y = this.y + 20
+        powerUpBody.position.x = this.x
+
+        powerUpBorders.push(powerUpBody)
+
+        powerUpObject.add(powerUpBody)
+    }
+}
+
+function createPowerUp(){
+    powerUpObject = new THREE.Object3D;
+
+    powerUps.forEach(function (powerUp) {
+        powerUp.create()
+    })
+
+
+    scene.add(powerUpObject)
+}
+
+class End{
+    constructor(x,y){
+        this.x= x
+        this.y = y
+    }
+    create(){
+        const materialWhite = new THREE.MeshPhongMaterial({
+            color: 0xd8d0d1,
+            wireframe: false
+        });
+
+        let depthGeo = new THREE.BoxGeometry(11,40,10)
+
+        let endDepth = new THREE.Mesh(depthGeo,materialWhite);
+
+        endDepth.position.y = this.y+20
+        endDepth.position.x = this.x
+        endDepth.position.z = -40
+
+        let platGeo = new THREE.BoxGeometry(11,10,50)
+
+        let endPlat = new THREE.Mesh(platGeo,materialWhite)
+
+        endPlat.position.y = this.y
+        endPlat.position.x = this.x
+        
+        endBorders.push(endPlat)
+
+        endObject.add(endDepth)
+        endObject.add(endPlat)
+        
+    }
+}
+
+
+
+function createEnd(){
+    endObject = new THREE.Object3D;
+
+    ends.forEach(function (end) {
+        end.create()
+    })
+
+
+    scene.add(endObject)
+}
+
 class Wall {
     constructor(x, y) {
         this.x = x
@@ -422,6 +536,7 @@ class Wall {
         console.log("borders:" , borders)
         wallBody.position.z = 75
         wallObject.add(wallBody)
+        
 
 
     }
@@ -446,9 +561,7 @@ function createLava(){
 
 }
 
-function createText(){
 
-}
 
 
 function createWalls(){
@@ -494,6 +607,8 @@ class Platform {
 
     }
 }
+
+
 
 function createPlatforms() {
 
@@ -629,7 +744,7 @@ function jump() {
 
     if (player.jump == true) {
         jumpStart()
-        if (player.height > 100) {
+        if (player.height > heightLimit) {
             player.jump = false
 
         } else if (checkBoundariesTop()) {
@@ -691,6 +806,33 @@ function updateCharacter(oldPos) {
 
 
 }
+
+function updatePowerUps(){
+    
+    if( powerUpHeight >= 5){
+        powerUpDirection = -0.2
+    }else if(powerUpHeight <= 0){
+        powerUpDirection = 0.2    
+    }
+
+    for(let i = 0; i < powerUpObject.children.length; i++){
+        powerUpObject.children[i].rotation.y += 0.1
+        powerUpObject.children[i].position.y += powerUpDirection
+
+        
+    }
+    powerUpHeight += powerUpDirection
+}
+
+function jumpPowerUp(){
+
+    if(jumpPowerUpCounter > 0){
+        heightLimit = 200
+        jumpPowerUpCounter -= 1
+    }else {
+        heightLimit = 100
+    }
+}
 /*
 function idleAnimation() {
     if (idle = false) {
@@ -748,6 +890,27 @@ function checkBoundariesBack(){
 }
 */
 
+function checkPowerUp(){
+
+    let penguinBox = new THREE.Box3().setFromObject(penguin)
+
+    
+    for (let i = 0; i < powerUpObject.children.length; i++) {
+
+        let borderBox = new THREE.Box3().setFromObject( powerUpObject.children[i])
+        let collision = penguinBox.intersectsBox(borderBox);
+
+
+        if (collision) {
+            powerUpObject.remove(powerUpObject.children[i])
+            jumpPowerUpCounter = 300
+            return true
+        }
+    }
+    return false
+}
+
+
 function checkBoundariesTop() {
 
     let penguinBox = new THREE.Box3().setFromObject(boundaryBoxTop)
@@ -765,6 +928,7 @@ function checkBoundariesTop() {
     }
     return false
 }
+
 
 function checkFloor() {
     let penguinBox = new THREE.Box3().setFromObject(boundaryBoxBottom)
@@ -795,7 +959,7 @@ function lavaCollision(id){
         if(collision){
 
             console.log("game over")
-            createGameOver()
+            alert("Game over!")
             cancelAnimationFrame(id)
             return true
         }else{
@@ -804,39 +968,36 @@ function lavaCollision(id){
         
 }
 
-function createGameOver(){
 
-   alert("Game over!")
-    /*
 
-    loader.load( 'fonts/helvetiker_bold.typeface.json', function ( font ) {
-
-	var geometry = new THREE.TextGeometry( 'Hello three.js!', {
-		font: font,
-		size: 80,
-		height: 5,
-		curveSegments: 12,
-		bevelEnabled: true,
-		bevelThickness: 10,
-		bevelSize: 8,
-		bevelOffset: 0,
-		bevelSegments: 5
-    } );
-    
-    scene.add(geometry)
-});
-*/
+function checkEnd(id){
+    let penguinBox = new THREE.Box3().setFromObject(boundaryBoxBottom)
 
     
-
-   
-
     
+    for (let i = 0; i < endBorders.length; i++) {
+
+        let borderBox = new THREE.Box3().setFromObject(endBorders[i])
+        let collision = penguinBox.intersectsBox(borderBox);
+
+
+        if (collision) {
+
+            console.log("Great! Bob has escaped!")
+            alert("Great! Bob has escaped!")
+            cancelAnimationFrame(id)
+            return true
+        }
+    }
+    return false
+
 }
+
+
 function animate() {
 
     let oldPos = bob.position.clone();
-
+    checkPowerUp()
     lava.position.y += 0.2
     //camera.position.x = bob.position.x + 100;
     camera.position.y = bob.position.y + 20;
@@ -844,7 +1005,10 @@ function animate() {
     camera.lookAt(bob.position)
 
     updateCharacter(oldPos)
+    updatePowerUps()
+    jumpPowerUp()
   // idleAnimation()
+
     
     renderer.render(scene, camera)
 
@@ -852,6 +1016,9 @@ function animate() {
    let id =  requestAnimationFrame(animate);
 
    lavaCollision(id)
+   
+   checkEnd(id)
+   
 
     // penguin.rotation.y += Math.PI * 0.002
 
