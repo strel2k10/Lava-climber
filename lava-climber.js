@@ -8,30 +8,32 @@ let hemisphereLight, directionalLight, directionalLightHelper;
 let maps = []
 
 maps.push([
-    // 0- Empty 1- Platforms  2-Walls  3- Platforms with powerups 4- platforms with end game
-    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,0,0,0,3,1,3,0,0,0,0,2,2],
-    [2,2,0,0,1,3,1,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,3,3,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,2,2],
-    [2,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,4,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
-    [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2],
-    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
-    [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+    // 0- Empty 1- Platforms  2- Platforms with powerups 3- platforms with end game
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,1,2,1,0,0,0,0],
+    [0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,2,1,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0],
+    [1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     ])
+
+ let mapSize = {
+     x: 0,
+     y:0
+}
 
 //Character
 let bob
@@ -57,6 +59,9 @@ let platformObject
 //walls
 let walls = []
 let wallObject
+
+//Back wall
+
 
 //borders
 let borders = []
@@ -93,14 +98,19 @@ window.onload = function init() {
     mapDraw()
     createCharacter();
     createPlatforms();
-    createWalls();
+
     createLava();
     createEnd();
+    createBackWall();
     createPowerUp();
     createLights();
+    createLeftWall();
+    createRightWall();
+    createFloor();
+    createCeiling();
    
 
-
+    console.log("Map size x : ",mapSize.x)
     animate();
     window.addEventListener('keydown', handleKeyPressed);
     window.addEventListener('keyup', handleKeyReleased);
@@ -110,29 +120,32 @@ window.onload = function init() {
 function mapDraw() {
 
     maps[0].forEach(function (row, i) {
-
+        
         row.forEach(function (tile, j) {
+            mapSize.x = 0
+
             console.log("Im being called")
             if (tile == 1) {
 
                 console.log("Platform created")
                 platforms.push(new Platform(j * 10, i * 40))
 
-            } else if (tile == 2) {
-
-                walls.push(new Wall(j * 10, i * 40))
-            }else if(tile == 3){
+            }else if(tile == 2){
 
                 platforms.push(new Platform(j*10,i*40))
                 powerUps.push(new PowerUp(j*10,i*40))
             
-            } else if(tile == 4){
+            } else if(tile == 3){
                 //platforms.push(new Platform(j*10, i*40))
                 ends.push(new End(j*10,i*40))
                
 
             }
+            mapSize.x += j*10
+            
         })
+
+        mapSize.y += i * 40
     })
 }
 /*
@@ -170,7 +183,7 @@ function createScene() {
 
 
     // position the camera
-    camera.position.x = 100
+    camera.position.x = 70
  
     camera.position.z = 150; //ALTERED: change from Z=2000 to Z=200
   
@@ -422,12 +435,94 @@ function createCharacter() {
     
 
     bob.position.y = 150
-    bob.position.x = 100
+    bob.position.x = 70
 
 
 
     scene.add(bob)
 
+
+}
+
+function createBackWall(){
+    const materialDark = new THREE.MeshPhongMaterial({
+        color: 0x614A30,
+        wireframe: false
+    });
+    let backWallGeo = new THREE.BoxGeometry(mapSize.x + 50,mapSize.y,10)
+    let backWallBody = new THREE.Mesh(backWallGeo,materialDark);
+    backWallBody.position.x = 80
+    backWallBody.position.z = -30
+
+    scene.add(backWallBody)
+}
+
+function createLeftWall(){
+
+    const materialDark = new THREE.MeshPhongMaterial({
+        color: 0x614A30,
+        wireframe: false
+    });
+    let leftWallGeo = new THREE.BoxGeometry(40,mapSize.y,200)
+    let leftWallBody = new THREE.Mesh(leftWallGeo,materialDark);
+
+    leftWallBody.position.x = -25
+    leftWallBody.position.z = 75
+    borders.push(leftWallBody)
+    scene.add(leftWallBody)
+
+}
+function createRightWall(){
+
+    const materialDark = new THREE.MeshPhongMaterial({
+        color: 0x614A30,
+        wireframe: false
+    });
+    let rightWallGeo = new THREE.BoxGeometry(40,mapSize.y,200)
+    let rightWallBody = new THREE.Mesh(rightWallGeo,materialDark);
+
+    rightWallBody.position.x = mapSize.x + 25
+    rightWallBody.position.z = 75
+
+    borders.push(rightWallBody)
+    scene.add(rightWallBody)
+
+}
+
+function createCeiling(){
+
+    const materialDark = new THREE.MeshPhongMaterial({
+        color: 0x614A30,
+        wireframe: false
+    });
+    let ceilingGeo = new THREE.BoxGeometry(mapSize.x + 10,10,200)
+    let ceilingBody = new THREE.Mesh(ceilingGeo,materialDark);
+
+    ceilingBody.position.x = 85
+    ceilingBody.position.y = mapSize.y
+    ceilingBody.position.z = 75
+
+    borders.push(ceilingBody)
+    scene.add(ceilingBody)
+
+}
+
+function createFloor(){
+
+    const materialDark = new THREE.MeshPhongMaterial({
+        color: 0x614A30,
+        wireframe: false
+    });
+    let floorGeo = new THREE.BoxGeometry(mapSize.x+ 10,10,200)
+    let floorBody = new THREE.Mesh(floorGeo,materialDark);
+
+    floorBody.position.x = 85
+    floorBody.position.y = -10
+    floorBody.position.z = 75
+
+
+    borders.push(floorBody)
+    scene.add(floorBody)
 
 }
 
@@ -483,14 +578,15 @@ class End{
 
         endDepth.position.y = this.y+20
         endDepth.position.x = this.x
-        endDepth.position.z = -40
+        endDepth.position.z = -29
 
-        let platGeo = new THREE.BoxGeometry(11,10,50)
+        let platGeo = new THREE.BoxGeometry(11,10,60)
 
         let endPlat = new THREE.Mesh(platGeo,materialWhite)
 
         endPlat.position.y = this.y
         endPlat.position.x = this.x
+        endPlat.position.z = -10
         
         endBorders.push(endPlat)
 
@@ -513,34 +609,6 @@ function createEnd(){
     scene.add(endObject)
 }
 
-class Wall {
-    constructor(x, y) {
-        this.x = x
-        this.y = y
-    }
-    create() {
-
-        const materialWhite = new THREE.MeshPhongMaterial({
-            color: 0xd8d0d1,
-            wireframe: false
-        });
-
-        let geomBody = new THREE.BoxGeometry(11, 50, 200)
-
-        let wallBody = new THREE.Mesh(geomBody, materialWhite);
-
-        wallBody.position.y = this.y
-        wallBody.position.x = this.x
-
-        borders.push(wallBody)
-        console.log("borders:" , borders)
-        wallBody.position.z = 75
-        wallObject.add(wallBody)
-        
-
-
-    }
-}
 
 function createLava(){
 
@@ -564,16 +632,7 @@ function createLava(){
 
 
 
-function createWalls(){
-    wallObject = new THREE.Object3D;
 
-    walls.forEach(function (wall) {
-        wall.create()
-    })
-
-
-    scene.add(wallObject)
-}
 
 class Platform {
     constructor(x, y) {
