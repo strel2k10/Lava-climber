@@ -19,15 +19,15 @@ maps.push([
     [1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,1,1,3,3,3,0,0],
     ])
 
  let mapSize = {
@@ -44,6 +44,7 @@ let idle
 
 //lava
 let lava
+let waves = []
 
 //let boundaryBoxBack
 let boundaryBoxTop
@@ -145,7 +146,7 @@ function mapDraw() {
             
         })
 
-        mapSize.y += i * 40
+        mapSize.y += i *10
     })
 }
 /*
@@ -181,6 +182,8 @@ function createScene() {
     // create a camera, which defines where we're looking at
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
 
+    
+
 
     // position the camera
     camera.position.x = 70
@@ -192,6 +195,8 @@ function createScene() {
     // create a render and set the size
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
 
     // configure renderer clear color
     renderer.setClearColor("#e4e0ba");
@@ -199,6 +204,11 @@ function createScene() {
     // add the output of the renderer to the DIV with id "world"
     document.getElementById('world').appendChild(renderer.domElement);
 
+
+   
+
+    let controls = new THREE.OrbitControls(camera);
+    controls.addEventListener('change', function () { renderer.render(scene, camera); });
     // listen to the screen: if the user resizes it we have to update the camera and the renderer size
     window.addEventListener('resize', handleWindowResize, false);
 }
@@ -263,7 +273,7 @@ function createCharacter() {
     head.position.y = 18
 
     head.scale.y = 0.9
-
+    
     body.add(head)
 
     // face
@@ -342,10 +352,10 @@ function createCharacter() {
 
     var lineMaterial = new THREE.LineBasicMaterial({
         transparent: true,
-       opacity: 0
+        opacity: 0
     })
 
-
+    body.castShadow = true;
 
 
     //Front Boundary Box
@@ -414,6 +424,7 @@ function createCharacter() {
 
 
 
+    
 
     penguin.scale.set(0.5, 0.5, 0.5)
 
@@ -434,7 +445,7 @@ function createCharacter() {
 
     
 
-    bob.position.y = 150
+    bob.position.y = 30
     bob.position.x = 70
 
 
@@ -449,9 +460,10 @@ function createBackWall(){
         color: 0x614A30,
         wireframe: false
     });
-    let backWallGeo = new THREE.BoxGeometry(mapSize.x + 50,mapSize.y,10)
+    let backWallGeo = new THREE.BoxGeometry(mapSize.x + 50,mapSize.y/2,10,100,100)
     let backWallBody = new THREE.Mesh(backWallGeo,materialDark);
     backWallBody.position.x = 80
+    backWallBody.position.y = mapSize.y/4
     backWallBody.position.z = -30
 
     scene.add(backWallBody)
@@ -463,10 +475,11 @@ function createLeftWall(){
         color: 0x614A30,
         wireframe: false
     });
-    let leftWallGeo = new THREE.BoxGeometry(40,mapSize.y,200)
+    let leftWallGeo = new THREE.BoxGeometry(40,mapSize.y/2,200)
     let leftWallBody = new THREE.Mesh(leftWallGeo,materialDark);
 
     leftWallBody.position.x = -25
+    leftWallBody.position.y = mapSize.y/4
     leftWallBody.position.z = 75
     borders.push(leftWallBody)
     scene.add(leftWallBody)
@@ -478,10 +491,11 @@ function createRightWall(){
         color: 0x614A30,
         wireframe: false
     });
-    let rightWallGeo = new THREE.BoxGeometry(40,mapSize.y,200)
+    let rightWallGeo = new THREE.BoxGeometry(40,mapSize.y/2,200)
     let rightWallBody = new THREE.Mesh(rightWallGeo,materialDark);
 
     rightWallBody.position.x = mapSize.x + 25
+    rightWallBody.position.y = mapSize.y/4
     rightWallBody.position.z = 75
 
     borders.push(rightWallBody)
@@ -499,7 +513,7 @@ function createCeiling(){
     let ceilingBody = new THREE.Mesh(ceilingGeo,materialDark);
 
     ceilingBody.position.x = 85
-    ceilingBody.position.y = mapSize.y
+    ceilingBody.position.y = mapSize.y/2
     ceilingBody.position.z = 75
 
     borders.push(ceilingBody)
@@ -517,7 +531,7 @@ function createFloor(){
     let floorBody = new THREE.Mesh(floorGeo,materialDark);
 
     floorBody.position.x = 85
-    floorBody.position.y = -10
+   
     floorBody.position.z = 75
 
 
@@ -543,6 +557,7 @@ class PowerUp{
 
         powerUpBody.position.y = this.y + 20
         powerUpBody.position.x = this.x
+        powerUpBody.castShadow = true;
 
         powerUpBorders.push(powerUpBody)
 
@@ -619,9 +634,26 @@ function createLava(){
         opacity: 0.8,
     });
 
-    let lavaBody = new THREE.BoxGeometry(1000,100,200)
+    let lavaBody = new THREE.BoxGeometry(1000,100,200,30,30)
+
+ 
 
     lava = new THREE.Mesh(lavaBody, materialLava)
+
+    let verts = lava.geometry.vertices
+
+    for(let i = 0;i < verts.length;i++){
+        const v = verts[i]
+
+        waves.push({
+            x: v.x, y: v.y , z: v.z,
+            and: Math.random()* Math.PI * 2,
+            amp: 5 + Math.random()*5,
+            speed:0.04+Math.random()*0.06
+        })
+    }
+
+
     lava.position.z = 50
     lava.position.y = -100
 
@@ -629,6 +661,22 @@ function createLava(){
 
 }
 
+function moveLava(){
+    const verts = lava.geometry.vertices;
+
+    for(let i = 0; i < verts.length; i++){
+        const v = verts[i]
+        let vprops = waves[i];
+
+        v.x = vprops.x + Math.cos(vprops.ang) * vprops.amp;
+        v.y = vprops.y + Math.sin(vprops.ang) * vprops.amp;
+        vprops.ang += vprops.speed; // update angle for next frame
+    }
+
+    lava.geometry.verticesNeedUpdate = true;
+
+    console.log("lava position",lava.position.y)
+}
 
 
 
@@ -657,6 +705,9 @@ class Platform {
         platformBody.position.x = this.x
 
         platformBody.position.z = -10
+
+       platformBody.receiveShadow = true; 
+       platformBody.castShadow = false;
 
         borders.push(platformBody)
         console.log("borders:", borders)
@@ -769,13 +820,28 @@ function createLights() {
     scene.add(hemisphereLight);
 
     // DirectionalLight
-    directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
-    directionalLight.position.set(80, 150, 60);
-    directionalLight.target =
-        scene.add(directionalLight);
+    directionalLight = new THREE.DirectionalLight(0xffffff, 1,100);
+    directionalLight.position.set(70, mapSize.y/2 - 10, 10);
+    directionalLight.castShadow = true
+    directionalLight.target.position.x = 100
+    scene.add(directionalLight);
+
+
+
+        directionalLight.shadow.mapSize.width = mapSize.x;  // default
+        directionalLight.shadow.mapSize.height = mapSize.y; // default
+
+        directionalLight.shadow.camera.left = -180
+        directionalLight.shadow.camera.right = 30
+        directionalLight.shadow.camera.top = 150
+        directionalLight.shadow.camera.bottom = -200
+        directionalLight.shadow.camera.near = 0.5;    // default
+        directionalLight.shadow.camera.far = mapSize.y/2
 
     directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
+    let helper = new THREE.CameraHelper( directionalLight.shadow.camera );
     scene.add(directionalLightHelper);
+    scene.add(helper)
 
 }
 
@@ -1055,6 +1121,7 @@ function checkEnd(id){
 
 function animate() {
 
+    
     let oldPos = bob.position.clone();
     checkPowerUp()
     lava.position.y += 0.2
@@ -1066,6 +1133,7 @@ function animate() {
     updateCharacter(oldPos)
     updatePowerUps()
     jumpPowerUp()
+    //moveLava()
   // idleAnimation()
 
     
@@ -1074,7 +1142,7 @@ function animate() {
     // render
    let id =  requestAnimationFrame(animate);
 
-   lavaCollision(id)
+   //lavaCollision(id)
    
    checkEnd(id)
    
