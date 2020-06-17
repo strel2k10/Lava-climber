@@ -9,30 +9,30 @@ let maps = []
 
 maps.push([
     // 0- Empty 1- Platforms  2- Platforms with powerups 3- platforms with end game
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,1,2,1,0,0,0,0],
-    [0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,2,1,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0],
-    [1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,1,1,3,3,3,0,0],
-    ])
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 0, 0, 0],
+    [0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+    [1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3, 3, 0, 0],
+])
 
- let mapSize = {
-     x: 0,
-     y:0
+let mapSize = {
+    x: 0,
+    y: 0
 }
 
 //Character
@@ -112,9 +112,9 @@ window.onload = function init() {
     createRightWall();
     createFloor();
     createCeiling();
-   
 
-    console.log("Map size x : ",mapSize.x)
+
+    console.log("Map size x : ", mapSize.x)
     animate();
     window.addEventListener('keydown', handleKeyPressed);
     window.addEventListener('keyup', handleKeyReleased);
@@ -124,7 +124,7 @@ window.onload = function init() {
 function mapDraw() {
 
     maps[0].forEach(function (row, i) {
-        
+
         row.forEach(function (tile, j) {
             mapSize.x = 0
 
@@ -134,22 +134,22 @@ function mapDraw() {
                 console.log("Platform created")
                 platforms.push(new Platform(j * 10, i * 40))
 
-            }else if(tile == 2){
+            } else if (tile == 2) {
 
-                platforms.push(new Platform(j*10,i*40))
-                powerUps.push(new PowerUp(j*10,i*40))
-            
-            } else if(tile == 3){
+                platforms.push(new Platform(j * 10, i * 40))
+                powerUps.push(new PowerUp(j * 10, i * 40))
+
+            } else if (tile == 3) {
                 //platforms.push(new Platform(j*10, i*40))
-                ends.push(new End(j*10,i*40))
-               
+                ends.push(new End(j * 10, i * 40))
+
 
             }
-            mapSize.x += j*10
-            
+            mapSize.x += j * 10
+
         })
 
-        mapSize.y += i *10
+        mapSize.y += i * 10
     })
 }
 /*
@@ -185,21 +185,21 @@ function createScene() {
     // create a camera, which defines where we're looking at
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
 
-    
+
 
 
     // position the camera
     camera.position.x = 70
- 
+
     camera.position.z = 150; //ALTERED: change from Z=2000 to Z=200
-  
+
 
 
     // create a render and set the size
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     // configure renderer clear color
     renderer.setClearColor("#e4e0ba");
@@ -208,7 +208,7 @@ function createScene() {
     document.getElementById('world').appendChild(renderer.domElement);
 
 
-   
+
 
     //let controls = new THREE.OrbitControls(camera);
     //controls.addEventListener('change', function () { renderer.render(scene, camera); });
@@ -276,7 +276,7 @@ function createCharacter() {
     head.position.y = 18
 
     head.scale.y = 0.9
-    
+
     body.add(head)
 
     // face
@@ -362,9 +362,9 @@ function createCharacter() {
 
 
     //Front Boundary Box
-   
-    let geoBoundFront = new THREE.BoxGeometry(50,55,10)
-    
+
+    let geoBoundFront = new THREE.BoxGeometry(50, 55, 10)
+
     boundaryBoxFront = new THREE.Mesh(geoBoundFront, lineMaterial)
 
     boundaryBoxFront.position.x = 50
@@ -427,7 +427,7 @@ function createCharacter() {
 
 
 
-    
+
 
     penguin.scale.set(0.5, 0.5, 0.5)
 
@@ -444,9 +444,9 @@ function createCharacter() {
     bob.add(penguin)
 
     var axesHelper = new THREE.AxesHelper(4);
-    scene.add( axesHelper );
+    scene.add(axesHelper);
 
-    
+
 
     bob.position.y = 30
     bob.position.x = 70
@@ -458,35 +458,35 @@ function createCharacter() {
 
 }
 
-function createBackWall(){
+function createBackWall() {
     const materialDark = new THREE.MeshPhongMaterial({
         color: 0x614A30,
         wireframe: false
     });
-    let backWallGeo = new THREE.BoxGeometry(mapSize.x + 50,mapSize.y/2,10,10,30,10)
-    let backWallBody = new THREE.Mesh(backWallGeo,materialDark);
+    let backWallGeo = new THREE.BoxGeometry(mapSize.x + 50, mapSize.y / 2, 10, 10, 30, 10)
+    let backWallBody = new THREE.Mesh(backWallGeo, materialDark);
 
-   
+
     let verts = backWallBody.geometry.vertices
 
-    
 
 
-    for(let i = 0;i < verts.length;i++){
+
+    for (let i = 0; i < verts.length; i++) {
         const v = verts[i]
 
         backWallCurves.push({
-            x: v.x, y: v.y , z: v.z,
-            ang: Math.random()* Math.PI * 2,
-            amp: 5 + Math.random()*5,
+            x: v.x, y: v.y, z: v.z,
+            ang: Math.random() * Math.PI * 2,
+            amp: 5 + Math.random() * 5,
             //speed:0.04+Math.random()*0.06
         })
     }
 
 
 
-   
-    for(let i = 0; i < verts.length; i++){
+
+    for (let i = 0; i < verts.length; i++) {
         const v = verts[i]
         let vprops = backWallCurves[i];
 
@@ -496,47 +496,47 @@ function createBackWall(){
     }
 
     backWallBody.geometry.verticesNeedUpdate = true;
-    
+
 
 
 
     backWallBody.position.x = 80
-    backWallBody.position.y = mapSize.y/4
+    backWallBody.position.y = mapSize.y / 4
     backWallBody.position.z = -30
 
     scene.add(backWallBody)
 }
 
-function createLeftWall(){
+function createLeftWall() {
 
     const materialDark = new THREE.MeshPhongMaterial({
         color: 0x614A30,
         wireframe: false
     });
-    let leftWallGeo = new THREE.BoxGeometry(40,mapSize.y/2,200, 10,30,10)
-    let leftWallBody = new THREE.Mesh(leftWallGeo,materialDark);
+    let leftWallGeo = new THREE.BoxGeometry(40, mapSize.y / 2, 200, 10, 30, 10)
+    let leftWallBody = new THREE.Mesh(leftWallGeo, materialDark);
 
-    
+
     let verts = leftWallBody.geometry.vertices
 
-    
 
 
-    for(let i = 0;i < verts.length;i++){
+
+    for (let i = 0; i < verts.length; i++) {
         const v = verts[i]
 
         leftWallCurves.push({
-            x: v.x, y: v.y , z: v.z,
-            ang: Math.random()* Math.PI * 2,
-            amp: 5 + Math.random()*5,
+            x: v.x, y: v.y, z: v.z,
+            ang: Math.random() * Math.PI * 2,
+            amp: 5 + Math.random() * 5,
             //speed:0.04+Math.random()*0.06
         })
     }
 
 
 
-   
-    for(let i = 0; i < verts.length; i++){
+
+    for (let i = 0; i < verts.length; i++) {
         const v = verts[i]
         let vprops = leftWallCurves[i];
 
@@ -549,42 +549,42 @@ function createLeftWall(){
 
 
     leftWallBody.position.x = -25
-    leftWallBody.position.y = mapSize.y/4
+    leftWallBody.position.y = mapSize.y / 4
     leftWallBody.position.z = 75
     borders.push(leftWallBody)
     scene.add(leftWallBody)
 
 }
-function createRightWall(){
+function createRightWall() {
 
     const materialDark = new THREE.MeshPhongMaterial({
         color: 0x614A30,
         wireframe: false
     });
-    let rightWallGeo = new THREE.BoxGeometry(40,mapSize.y/2,200, 10,30,10)
-    let rightWallBody = new THREE.Mesh(rightWallGeo,materialDark);
+    let rightWallGeo = new THREE.BoxGeometry(40, mapSize.y / 2, 200, 10, 30, 10)
+    let rightWallBody = new THREE.Mesh(rightWallGeo, materialDark);
 
 
     let verts = rightWallBody.geometry.vertices
 
-    
 
 
-    for(let i = 0;i < verts.length;i++){
+
+    for (let i = 0; i < verts.length; i++) {
         const v = verts[i]
 
         rightWallCurves.push({
-            x: v.x, y: v.y , z: v.z,
-            ang: Math.random()* Math.PI * 2,
-            amp: 5 + Math.random()*5,
+            x: v.x, y: v.y, z: v.z,
+            ang: Math.random() * Math.PI * 2,
+            amp: 5 + Math.random() * 5,
             //speed:0.04+Math.random()*0.06
         })
     }
 
 
 
-   
-    for(let i = 0; i < verts.length; i++){
+
+    for (let i = 0; i < verts.length; i++) {
         const v = verts[i]
         let vprops = rightWallCurves[i];
 
@@ -597,7 +597,7 @@ function createRightWall(){
 
 
     rightWallBody.position.x = mapSize.x + 25
-    rightWallBody.position.y = mapSize.y/4
+    rightWallBody.position.y = mapSize.y / 4
     rightWallBody.position.z = 75
     //rightWallBody.rotation.y = THREE.Math.degToRad(90);
     borders.push(rightWallBody)
@@ -605,17 +605,17 @@ function createRightWall(){
 
 }
 
-function createCeiling(){
+function createCeiling() {
 
     const materialDark = new THREE.MeshPhongMaterial({
         color: 0x614A30,
         wireframe: false
     });
-    let ceilingGeo = new THREE.BoxGeometry(mapSize.x + 10,10,200)
-    let ceilingBody = new THREE.Mesh(ceilingGeo,materialDark);
+    let ceilingGeo = new THREE.BoxGeometry(mapSize.x + 10, 10, 200)
+    let ceilingBody = new THREE.Mesh(ceilingGeo, materialDark);
 
     ceilingBody.position.x = 85
-    ceilingBody.position.y = mapSize.y/2
+    ceilingBody.position.y = mapSize.y / 2
     ceilingBody.position.z = 75
 
     borders.push(ceilingBody)
@@ -623,17 +623,17 @@ function createCeiling(){
 
 }
 
-function createFloor(){
+function createFloor() {
 
     const materialDark = new THREE.MeshPhongMaterial({
         color: 0x614A30,
         wireframe: false
     });
-    let floorGeo = new THREE.BoxGeometry(mapSize.x+ 10,10,200)
-    let floorBody = new THREE.Mesh(floorGeo,materialDark);
+    let floorGeo = new THREE.BoxGeometry(mapSize.x + 10, 10, 200)
+    let floorBody = new THREE.Mesh(floorGeo, materialDark);
 
     floorBody.position.x = 85
-   
+
     floorBody.position.z = 75
 
 
@@ -642,20 +642,20 @@ function createFloor(){
 
 }
 
-class PowerUp{
-    constructor(x,y){
+class PowerUp {
+    constructor(x, y) {
         this.x = x
         this.y = y
     }
-    create(){
-        
+    create() {
+
         const materialWhite = new THREE.MeshPhongMaterial({
             color: 0xd8d0d1,
             wireframe: false
         });
 
-        let powerUpGeo = new THREE.BoxGeometry(10,10,10)
-        let powerUpBody = new THREE.Mesh(powerUpGeo,materialWhite);
+        let powerUpGeo = new THREE.BoxGeometry(10, 10, 10)
+        let powerUpBody = new THREE.Mesh(powerUpGeo, materialWhite);
 
         powerUpBody.position.y = this.y + 20
         powerUpBody.position.x = this.x
@@ -667,7 +667,7 @@ class PowerUp{
     }
 }
 
-function createPowerUp(){
+function createPowerUp() {
     powerUpObject = new THREE.Object3D;
 
     powerUps.forEach(function (powerUp) {
@@ -678,44 +678,44 @@ function createPowerUp(){
     scene.add(powerUpObject)
 }
 
-class End{
-    constructor(x,y){
-        this.x= x
+class End {
+    constructor(x, y) {
+        this.x = x
         this.y = y
     }
-    create(){
+    create() {
         const materialWhite = new THREE.MeshPhongMaterial({
             color: 0xd8d0d1,
             wireframe: false
         });
 
-        let depthGeo = new THREE.BoxGeometry(11,40,10)
+        let depthGeo = new THREE.BoxGeometry(11, 40, 10)
 
-        let endDepth = new THREE.Mesh(depthGeo,materialWhite);
+        let endDepth = new THREE.Mesh(depthGeo, materialWhite);
 
-        endDepth.position.y = this.y+20
+        endDepth.position.y = this.y + 20
         endDepth.position.x = this.x
         endDepth.position.z = -29
 
-        let platGeo = new THREE.BoxGeometry(11,10,60)
+        let platGeo = new THREE.BoxGeometry(11, 10, 60)
 
-        let endPlat = new THREE.Mesh(platGeo,materialWhite)
+        let endPlat = new THREE.Mesh(platGeo, materialWhite)
 
         endPlat.position.y = this.y
         endPlat.position.x = this.x
         endPlat.position.z = -10
-        
+
         endBorders.push(endPlat)
 
         endObject.add(endDepth)
         endObject.add(endPlat)
-        
+
     }
 }
 
 
 
-function createEnd(){
+function createEnd() {
     endObject = new THREE.Object3D;
 
     ends.forEach(function (end) {
@@ -727,7 +727,7 @@ function createEnd(){
 }
 
 
-function createLava(){
+function createLava() {
 
     const materialLava = new THREE.MeshPhongMaterial({
         color: 0xFF5B33,
@@ -736,9 +736,9 @@ function createLava(){
         opacity: 0.8,
     });
 
-    let lavaBody = new THREE.BoxGeometry(1000,100,200,30,30)
+    let lavaBody = new THREE.BoxGeometry(1000, 100, 200, 30, 30)
 
- 
+
 
     lava = new THREE.Mesh(lavaBody, materialLava)
 
@@ -746,14 +746,14 @@ function createLava(){
 
     console.log("vertices: ", verts)
 
-    for(let i = 0;i < verts.length;i++){
+    for (let i = 0; i < verts.length; i++) {
         const v = verts[i]
 
         waves.push({
-            x: v.x, y: v.y , z: v.z,
-            ang: Math.random()* Math.PI * 2,
-            amp: 5 + Math.random()*5,
-            speed:0.04+Math.random()*0.06
+            x: v.x, y: v.y, z: v.z,
+            ang: Math.random() * Math.PI * 2,
+            amp: 5 + Math.random() * 5,
+            speed: 0.04 + Math.random() * 0.09
         })
     }
 
@@ -765,10 +765,10 @@ function createLava(){
 
 }
 
-function moveLava(){
+function moveLava() {
     const verts = lava.geometry.vertices;
 
-    for(let i = 0; i < verts.length; i++){
+    for (let i = 0; i < verts.length; i++) {
         const v = verts[i]
         let vprops = waves[i];
 
@@ -779,7 +779,7 @@ function moveLava(){
 
     lava.geometry.verticesNeedUpdate = true;
 
-    
+
 }
 
 
@@ -810,8 +810,8 @@ class Platform {
 
         platformBody.position.z = -10
 
-       platformBody.receiveShadow = true; 
-       platformBody.castShadow = false;
+        platformBody.receiveShadow = true;
+        platformBody.castShadow = false;
 
         borders.push(platformBody)
         console.log("borders:", borders)
@@ -924,26 +924,26 @@ function createLights() {
     scene.add(hemisphereLight);
 
     // DirectionalLight
-    directionalLight = new THREE.DirectionalLight(0xffffff, 1,100);
-    directionalLight.position.set(70, mapSize.y/2 - 10, 10);
+    directionalLight = new THREE.DirectionalLight(0xffffff, 1, 100);
+    directionalLight.position.set(70, mapSize.y / 2 - 10, 10);
     directionalLight.castShadow = true
     directionalLight.target.position.x = 100
     scene.add(directionalLight);
 
 
 
-        directionalLight.shadow.mapSize.width = mapSize.x;  // default
-        directionalLight.shadow.mapSize.height = mapSize.y; // default
+    directionalLight.shadow.mapSize.width = mapSize.x;  // default
+    directionalLight.shadow.mapSize.height = mapSize.y; // default
 
-        directionalLight.shadow.camera.left = -180
-        directionalLight.shadow.camera.right = 30
-        directionalLight.shadow.camera.top = 150
-        directionalLight.shadow.camera.bottom = -200
-        directionalLight.shadow.camera.near = 0.5;    // default
-        directionalLight.shadow.camera.far = mapSize.y/2
+    directionalLight.shadow.camera.left = -180
+    directionalLight.shadow.camera.right = 30
+    directionalLight.shadow.camera.top = 150
+    directionalLight.shadow.camera.bottom = -200
+    directionalLight.shadow.camera.near = 0.5;    // default
+    directionalLight.shadow.camera.far = mapSize.y / 2
 
     directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
-    let helper = new THREE.CameraHelper( directionalLight.shadow.camera );
+    let helper = new THREE.CameraHelper(directionalLight.shadow.camera);
     scene.add(directionalLightHelper);
     scene.add(helper)
 
@@ -1000,7 +1000,7 @@ function jump() {
 function updateCharacter(oldPos) {
 
 
-   
+
     if (checkFloor() && player.jump == false) {
         floor = true
     } else {
@@ -1036,29 +1036,29 @@ function updateCharacter(oldPos) {
 
 }
 
-function updatePowerUps(){
-    
-    if( powerUpHeight >= 5){
+function updatePowerUps() {
+
+    if (powerUpHeight >= 5) {
         powerUpDirection = -0.2
-    }else if(powerUpHeight <= 0){
-        powerUpDirection = 0.2    
+    } else if (powerUpHeight <= 0) {
+        powerUpDirection = 0.2
     }
 
-    for(let i = 0; i < powerUpObject.children.length; i++){
+    for (let i = 0; i < powerUpObject.children.length; i++) {
         powerUpObject.children[i].rotation.y += 0.1
         powerUpObject.children[i].position.y += powerUpDirection
 
-        
+
     }
     powerUpHeight += powerUpDirection
 }
 
-function jumpPowerUp(){
+function jumpPowerUp() {
 
-    if(jumpPowerUpCounter > 0){
+    if (jumpPowerUpCounter > 0) {
         heightLimit = 200
         jumpPowerUpCounter -= 1
-    }else {
+    } else {
         heightLimit = 100
     }
 }
@@ -1119,14 +1119,14 @@ function checkBoundariesBack(){
 }
 */
 
-function checkPowerUp(){
+function checkPowerUp() {
 
     let penguinBox = new THREE.Box3().setFromObject(penguin)
 
-    
+
     for (let i = 0; i < powerUpObject.children.length; i++) {
 
-        let borderBox = new THREE.Box3().setFromObject( powerUpObject.children[i])
+        let borderBox = new THREE.Box3().setFromObject(powerUpObject.children[i])
         let collision = penguinBox.intersectsBox(borderBox);
 
 
@@ -1176,34 +1176,35 @@ function checkFloor() {
     return false
 }
 
-function lavaCollision(id){
+function lavaCollision(id) {
     let penguinBox = new THREE.Box3().setFromObject(penguin.children[0].children[0])
 
-  
 
-        let borderBox = new THREE.Box3().setFromObject(lava)
-        let collision = penguinBox.intersectsBox(borderBox);
-        
 
-        if(collision){
+    let borderBox = new THREE.Box3().setFromObject(lava)
+    let collision = penguinBox.intersectsBox(borderBox);
 
-            console.log("game over")
-            alert("Game over!")
-            cancelAnimationFrame(id)
-            return true
-        }else{
-            return false
-        }
-        
+
+    if (collision) {
+
+        console.log("game over")
+        alert("Game over!")
+        cancelAnimationFrame(id)
+        location.reload();
+        return true
+    } else {
+        return false
+    }
+
 }
 
 
 
-function checkEnd(id){
+function checkEnd(id) {
     let penguinBox = new THREE.Box3().setFromObject(boundaryBoxBottom)
 
-    
-    
+
+
     for (let i = 0; i < endBorders.length; i++) {
 
         let borderBox = new THREE.Box3().setFromObject(endBorders[i])
@@ -1213,9 +1214,16 @@ function checkEnd(id){
         if (collision) {
 
             console.log("Great! Bob has escaped!")
-            alert("Great! Bob has escaped!")
+            let victory = confirm("Great! Bob has escaped! Want to play again?");
+
+
             cancelAnimationFrame(id)
+            if (victory) {
+                location.reload();
+            }
             return true
+
+
         }
     }
     return false
@@ -1225,7 +1233,7 @@ function checkEnd(id){
 
 function animate() {
 
-    
+
     let oldPos = bob.position.clone();
     checkPowerUp()
     lava.position.y += 0.2
@@ -1238,18 +1246,18 @@ function animate() {
     updatePowerUps()
     jumpPowerUp()
     moveLava()
-  // idleAnimation()
+    // idleAnimation()
 
-    
+
     renderer.render(scene, camera)
 
     // render
-   let id =  requestAnimationFrame(animate);
+    let id = requestAnimationFrame(animate);
 
-   lavaCollision(id)
-   
-   checkEnd(id)
-   
+    lavaCollision(id)
+
+    checkEnd(id)
+
 
     // penguin.rotation.y += Math.PI * 0.002
 
