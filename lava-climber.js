@@ -61,6 +61,9 @@ let platformObject
 let walls = []
 let wallObject
 
+let leftWallCurves = []
+let rightWallCurves = []
+let backWallCurves = []
 //Back wall
 
 
@@ -207,8 +210,8 @@ function createScene() {
 
    
 
-    let controls = new THREE.OrbitControls(camera);
-    controls.addEventListener('change', function () { renderer.render(scene, camera); });
+    //let controls = new THREE.OrbitControls(camera);
+    //controls.addEventListener('change', function () { renderer.render(scene, camera); });
     // listen to the screen: if the user resizes it we have to update the camera and the renderer size
     window.addEventListener('resize', handleWindowResize, false);
 }
@@ -460,8 +463,43 @@ function createBackWall(){
         color: 0x614A30,
         wireframe: false
     });
-    let backWallGeo = new THREE.BoxGeometry(mapSize.x + 50,mapSize.y/2,10,100,100)
+    let backWallGeo = new THREE.BoxGeometry(mapSize.x + 50,mapSize.y/2,10,10,30,10)
     let backWallBody = new THREE.Mesh(backWallGeo,materialDark);
+
+   
+    let verts = backWallBody.geometry.vertices
+
+    
+
+
+    for(let i = 0;i < verts.length;i++){
+        const v = verts[i]
+
+        backWallCurves.push({
+            x: v.x, y: v.y , z: v.z,
+            ang: Math.random()* Math.PI * 2,
+            amp: 5 + Math.random()*5,
+            //speed:0.04+Math.random()*0.06
+        })
+    }
+
+
+
+   
+    for(let i = 0; i < verts.length; i++){
+        const v = verts[i]
+        let vprops = backWallCurves[i];
+
+        v.x = vprops.x + Math.cos(vprops.ang) * vprops.amp;
+        v.y = vprops.y + Math.sin(vprops.ang) * vprops.amp;
+        //vprops.ang += vprops.speed; // update angle for next frame
+    }
+
+    backWallBody.geometry.verticesNeedUpdate = true;
+    
+
+
+
     backWallBody.position.x = 80
     backWallBody.position.y = mapSize.y/4
     backWallBody.position.z = -30
@@ -475,8 +513,40 @@ function createLeftWall(){
         color: 0x614A30,
         wireframe: false
     });
-    let leftWallGeo = new THREE.BoxGeometry(40,mapSize.y/2,200)
+    let leftWallGeo = new THREE.BoxGeometry(40,mapSize.y/2,200, 10,30,10)
     let leftWallBody = new THREE.Mesh(leftWallGeo,materialDark);
+
+    
+    let verts = leftWallBody.geometry.vertices
+
+    
+
+
+    for(let i = 0;i < verts.length;i++){
+        const v = verts[i]
+
+        leftWallCurves.push({
+            x: v.x, y: v.y , z: v.z,
+            ang: Math.random()* Math.PI * 2,
+            amp: 5 + Math.random()*5,
+            //speed:0.04+Math.random()*0.06
+        })
+    }
+
+
+
+   
+    for(let i = 0; i < verts.length; i++){
+        const v = verts[i]
+        let vprops = leftWallCurves[i];
+
+        v.x = vprops.x + Math.cos(vprops.ang) * vprops.amp;
+        v.y = vprops.y + Math.sin(vprops.ang) * vprops.amp;
+        //vprops.ang += vprops.speed; // update angle for next frame
+    }
+
+    leftWallBody.geometry.verticesNeedUpdate = true;
+
 
     leftWallBody.position.x = -25
     leftWallBody.position.y = mapSize.y/4
@@ -491,13 +561,45 @@ function createRightWall(){
         color: 0x614A30,
         wireframe: false
     });
-    let rightWallGeo = new THREE.BoxGeometry(40,mapSize.y/2,200)
+    let rightWallGeo = new THREE.BoxGeometry(40,mapSize.y/2,200, 10,30,10)
     let rightWallBody = new THREE.Mesh(rightWallGeo,materialDark);
+
+
+    let verts = rightWallBody.geometry.vertices
+
+    
+
+
+    for(let i = 0;i < verts.length;i++){
+        const v = verts[i]
+
+        rightWallCurves.push({
+            x: v.x, y: v.y , z: v.z,
+            ang: Math.random()* Math.PI * 2,
+            amp: 5 + Math.random()*5,
+            //speed:0.04+Math.random()*0.06
+        })
+    }
+
+
+
+   
+    for(let i = 0; i < verts.length; i++){
+        const v = verts[i]
+        let vprops = rightWallCurves[i];
+
+        v.x = vprops.x + Math.cos(vprops.ang) * vprops.amp;
+        v.y = vprops.y + Math.sin(vprops.ang) * vprops.amp;
+        //vprops.ang += vprops.speed; // update angle for next frame
+    }
+
+    rightWallBody.geometry.verticesNeedUpdate = true;
+
 
     rightWallBody.position.x = mapSize.x + 25
     rightWallBody.position.y = mapSize.y/4
     rightWallBody.position.z = 75
-
+    //rightWallBody.rotation.y = THREE.Math.degToRad(90);
     borders.push(rightWallBody)
     scene.add(rightWallBody)
 
@@ -642,12 +744,14 @@ function createLava(){
 
     let verts = lava.geometry.vertices
 
+    console.log("vertices: ", verts)
+
     for(let i = 0;i < verts.length;i++){
         const v = verts[i]
 
         waves.push({
             x: v.x, y: v.y , z: v.z,
-            and: Math.random()* Math.PI * 2,
+            ang: Math.random()* Math.PI * 2,
             amp: 5 + Math.random()*5,
             speed:0.04+Math.random()*0.06
         })
@@ -675,7 +779,7 @@ function moveLava(){
 
     lava.geometry.verticesNeedUpdate = true;
 
-    console.log("lava position",lava.position.y)
+    
 }
 
 
@@ -1133,7 +1237,7 @@ function animate() {
     updateCharacter(oldPos)
     updatePowerUps()
     jumpPowerUp()
-    //moveLava()
+    moveLava()
   // idleAnimation()
 
     
@@ -1142,7 +1246,7 @@ function animate() {
     // render
    let id =  requestAnimationFrame(animate);
 
-   //lavaCollision(id)
+   lavaCollision(id)
    
    checkEnd(id)
    
