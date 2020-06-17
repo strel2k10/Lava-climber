@@ -114,7 +114,7 @@ window.onload = function init() {
     createCeiling();
 
 
-    console.log("Map size x : ", mapSize.x)
+
     animate();
     window.addEventListener('keydown', handleKeyPressed);
     window.addEventListener('keyup', handleKeyReleased);
@@ -128,10 +128,10 @@ function mapDraw() {
         row.forEach(function (tile, j) {
             mapSize.x = 0
 
-            console.log("Im being called")
+
             if (tile == 1) {
 
-                console.log("Platform created")
+
                 platforms.push(new Platform(j * 10, i * 40))
 
             } else if (tile == 2) {
@@ -179,7 +179,8 @@ function createScene() {
 
 function createScene() {
     // create an empty scene, that will hold all our elements such as objects, cameras and lights
-    scene = new THREE.Scene();
+    scene = new THREE.Scene();   
+
     //scene.fog = new THREE.Fog(0xf7d9aa, 100);
 
     // create a camera, which defines where we're looking at
@@ -476,7 +477,9 @@ function createBackWall() {
         const v = verts[i]
 
         backWallCurves.push({
-            x: v.x, y: v.y, z: v.z,
+            x: v.x,
+            y: v.y,
+            z: v.z,
             ang: Math.random() * Math.PI * 2,
             amp: 5 + Math.random() * 5,
             //speed:0.04+Math.random()*0.06
@@ -510,7 +513,7 @@ function createBackWall() {
 function createLeftWall() {
 
     const materialDark = new THREE.MeshPhongMaterial({
-        color: 0x614A30,
+        color: 0xBCEFFF,
         wireframe: false
     });
     let leftWallGeo = new THREE.BoxGeometry(40, mapSize.y / 2, 200, 10, 30, 10)
@@ -526,7 +529,9 @@ function createLeftWall() {
         const v = verts[i]
 
         leftWallCurves.push({
-            x: v.x, y: v.y, z: v.z,
+            x: v.x,
+            y: v.y,
+            z: v.z,
             ang: Math.random() * Math.PI * 2,
             amp: 5 + Math.random() * 5,
             //speed:0.04+Math.random()*0.06
@@ -555,6 +560,7 @@ function createLeftWall() {
     scene.add(leftWallBody)
 
 }
+
 function createRightWall() {
 
     const materialDark = new THREE.MeshPhongMaterial({
@@ -574,7 +580,9 @@ function createRightWall() {
         const v = verts[i]
 
         rightWallCurves.push({
-            x: v.x, y: v.y, z: v.z,
+            x: v.x,
+            y: v.y,
+            z: v.z,
             ang: Math.random() * Math.PI * 2,
             amp: 5 + Math.random() * 5,
             //speed:0.04+Math.random()*0.06
@@ -744,13 +752,14 @@ function createLava() {
 
     let verts = lava.geometry.vertices
 
-    console.log("vertices: ", verts)
 
     for (let i = 0; i < verts.length; i++) {
         const v = verts[i]
 
         waves.push({
-            x: v.x, y: v.y, z: v.z,
+            x: v.x,
+            y: v.y,
+            z: v.z,
             ang: Math.random() * Math.PI * 2,
             amp: 5 + Math.random() * 5,
             speed: 0.04 + Math.random() * 0.09
@@ -795,6 +804,13 @@ class Platform {
 
     create() {
 
+        let iceTexture = new THREE.TextureLoader().load('./tex/ice2.png');
+
+        let iceMaterial = new THREE.MeshPhongMaterial({
+            transparent: true,
+            opacity: 1,
+            map: iceTexture
+        });
 
         const materialWhite = new THREE.MeshPhongMaterial({
             color: 0xd8d0d1,
@@ -803,7 +819,7 @@ class Platform {
 
         let geomBody = new THREE.BoxGeometry(11, 10, 50)
 
-        let platformBody = new THREE.Mesh(geomBody, materialWhite);
+        let platformBody = new THREE.Mesh(geomBody, iceMaterial);
 
         platformBody.position.y = this.y
         platformBody.position.x = this.x
@@ -814,7 +830,7 @@ class Platform {
         platformBody.castShadow = false;
 
         borders.push(platformBody)
-        console.log("borders:", borders)
+
         platformObject.add(platformBody)
 
 
@@ -932,14 +948,14 @@ function createLights() {
 
 
 
-    directionalLight.shadow.mapSize.width = mapSize.x;  // default
+    directionalLight.shadow.mapSize.width = mapSize.x; // default
     directionalLight.shadow.mapSize.height = mapSize.y; // default
 
     directionalLight.shadow.camera.left = -180
     directionalLight.shadow.camera.right = 30
     directionalLight.shadow.camera.top = 150
     directionalLight.shadow.camera.bottom = -200
-    directionalLight.shadow.camera.near = 0.5;    // default
+    directionalLight.shadow.camera.near = 0.5; // default
     directionalLight.shadow.camera.far = mapSize.y / 2
 
     directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
