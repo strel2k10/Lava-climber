@@ -460,9 +460,13 @@ function createCharacter() {
 }
 
 function createBackWall() {
+
+    let iceTexture = new THREE.TextureLoader().load('./tex/iceWall2.jpg');
+
     const materialDark = new THREE.MeshPhongMaterial({
-        color: 0x614A30,
-        wireframe: false
+        color: 0xFFFFFF,
+        wireframe: false,
+        map: iceTexture
     });
     let backWallGeo = new THREE.BoxGeometry(mapSize.x + 50, mapSize.y / 2, 10, 10, 30, 10)
     let backWallBody = new THREE.Mesh(backWallGeo, materialDark);
@@ -481,7 +485,7 @@ function createBackWall() {
             y: v.y,
             z: v.z,
             ang: Math.random() * Math.PI * 2,
-            amp: 5 + Math.random() * 5,
+            amp: 1 + Math.random() * 2,
             //speed:0.04+Math.random()*0.06
         })
     }
@@ -504,7 +508,7 @@ function createBackWall() {
 
 
     backWallBody.position.x = 80
-    backWallBody.position.y = mapSize.y / 4
+    backWallBody.position.y = mapSize.y / 4 - 10
     backWallBody.position.z = -30
 
     scene.add(backWallBody)
@@ -512,9 +516,12 @@ function createBackWall() {
 
 function createLeftWall() {
 
+    let iceTexture = new THREE.TextureLoader().load('./tex/iceWall2.jpg');
+
     const materialDark = new THREE.MeshPhongMaterial({
-        color: 0xBCEFFF,
-        wireframe: false
+        color: 0xFFFFFF,
+        wireframe: false,
+        map: iceTexture
     });
     let leftWallGeo = new THREE.BoxGeometry(40, mapSize.y / 2, 200, 10, 30, 10)
     let leftWallBody = new THREE.Mesh(leftWallGeo, materialDark);
@@ -533,7 +540,7 @@ function createLeftWall() {
             y: v.y,
             z: v.z,
             ang: Math.random() * Math.PI * 2,
-            amp: 5 + Math.random() * 5,
+            amp:  1 + Math.random() * 2,
             //speed:0.04+Math.random()*0.06
         })
     }
@@ -554,8 +561,8 @@ function createLeftWall() {
 
 
     leftWallBody.position.x = -25
-    leftWallBody.position.y = mapSize.y / 4
-    leftWallBody.position.z = 75
+    leftWallBody.position.y = mapSize.y / 4 - 10
+    leftWallBody.position.z = 75 
     borders.push(leftWallBody)
     scene.add(leftWallBody)
 
@@ -563,9 +570,11 @@ function createLeftWall() {
 
 function createRightWall() {
 
+    let iceTexture = new THREE.TextureLoader().load('./tex/iceWall2.jpg');
+
     const materialDark = new THREE.MeshPhongMaterial({
-        color: 0x614A30,
-        wireframe: false
+        wireframe: false,
+        map: iceTexture
     });
     let rightWallGeo = new THREE.BoxGeometry(40, mapSize.y / 2, 200, 10, 30, 10)
     let rightWallBody = new THREE.Mesh(rightWallGeo, materialDark);
@@ -584,7 +593,7 @@ function createRightWall() {
             y: v.y,
             z: v.z,
             ang: Math.random() * Math.PI * 2,
-            amp: 5 + Math.random() * 5,
+            amp:  2 + Math.random() * 4,
             //speed:0.04+Math.random()*0.06
         })
     }
@@ -605,7 +614,7 @@ function createRightWall() {
 
 
     rightWallBody.position.x = mapSize.x + 25
-    rightWallBody.position.y = mapSize.y / 4
+    rightWallBody.position.y = mapSize.y / 4 - 10
     rightWallBody.position.z = 75
     //rightWallBody.rotation.y = THREE.Math.degToRad(90);
     borders.push(rightWallBody)
@@ -616,7 +625,7 @@ function createRightWall() {
 function createCeiling() {
 
     const materialDark = new THREE.MeshPhongMaterial({
-        color: 0x614A30,
+      
         wireframe: false
     });
     let ceilingGeo = new THREE.BoxGeometry(mapSize.x + 10, 10, 200)
@@ -633,16 +642,18 @@ function createCeiling() {
 
 function createFloor() {
 
+    let iceTexture = new THREE.TextureLoader().load('./tex/ice2.png');
+
     const materialDark = new THREE.MeshPhongMaterial({
-        color: 0x614A30,
-        wireframe: false
+       color: 0x5E5E5E,
+        map: iceTexture
     });
-    let floorGeo = new THREE.BoxGeometry(mapSize.x + 10, 10, 200)
+    let floorGeo = new THREE.BoxGeometry(mapSize.x + 50, 10, 250)
     let floorBody = new THREE.Mesh(floorGeo, materialDark);
 
-    floorBody.position.x = 85
+    floorBody.position.x = 65
 
-    floorBody.position.z = 75
+    floorBody.position.z = 55
 
 
     borders.push(floorBody)
@@ -737,14 +748,14 @@ function createEnd() {
 
 function createLava() {
 
+    let lavaTexture = new THREE.TextureLoader().load('./tex/lava2.png');
     const materialLava = new THREE.MeshPhongMaterial({
         color: 0xFF5B33,
         wireframe: false,
-        transparent: true,
-        opacity: 0.8,
+        map: lavaTexture
     });
 
-    let lavaBody = new THREE.BoxGeometry(1000, 100, 200, 30, 30)
+    let lavaBody = new THREE.BoxGeometry(mapSize.x + 150, 100, 200, 30, 30)
 
 
 
@@ -761,15 +772,15 @@ function createLava() {
             y: v.y,
             z: v.z,
             ang: Math.random() * Math.PI * 2,
-            amp: 5 + Math.random() * 5,
+            amp: 1 + Math.random() * 3,
             speed: 0.04 + Math.random() * 0.09
         })
     }
 
-
+    lava.position.x = 80
     lava.position.z = 50
     lava.position.y = -100
-
+    
     scene.add(lava)
 
 }
