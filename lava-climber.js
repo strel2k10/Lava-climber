@@ -1,16 +1,18 @@
+
+
 // THREEJS RELATED VARIABLES
-let scene, camera, renderer;
+let scene, camera, renderer //rectLight;
 let controls;
 
 //LIGHTS 
-let hemisphereLight, directionalLight, directionalLightHelper;
+let hemisphereLight, directionalLight, directionalLightHelper, rectLightHelper ;
 //Map
 let maps = []
 
 maps.push([
     // 0- Empty 1- Platforms  2- Platforms with powerups 3- platforms with end game
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 0, 0, 0],
     [0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -95,7 +97,8 @@ let player = {
     jump: false,
     powerUp: false,
 }
-
+//lights
+let rectLightObject
 heightLimit = 100
 
 let grav = 1
@@ -104,18 +107,19 @@ let speed = 2
 window.onload = function init() {
     createScene();
     mapDraw()
+    createLights();
+   
     createCharacter();
     createPlatforms();
-
     createLava();
     createEnd();
     createBackWall();
     createPowerUp();
-    createLights();
     createLeftWall();
     createRightWall();
     createFloor();
     createCeiling();
+    
 
 
 
@@ -146,7 +150,9 @@ function mapDraw() {
             } else if (tile == 3) {
                 //platforms.push(new Platform(j*10, i*40))
                 ends.push(new End(j * 10, i * 40))
-
+/*
+             
+*/
 
             }
             mapSize.x += j * 10
@@ -190,8 +196,11 @@ function createScene() {
     // create a camera, which defines where we're looking at
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
 
+    var width = 11;
+    var height = 40;
+    var intensity = 1;
 
-
+    //rectLight = new THREE.RectAreaLightUniformsLib
 
     // position the camera
     camera.position.x = 70
@@ -208,6 +217,8 @@ function createScene() {
 
     // configure renderer clear color
     renderer.setClearColor("#e4e0ba");
+
+    //RectAreaLightUniformsLib.init();
 
     // add the output of the renderer to the DIV with id "world"
     document.getElementById('world').appendChild(renderer.domElement);
@@ -707,9 +718,19 @@ class End {
         this.y = y
     }
     create() {
+
+        let iceTexture = new THREE.TextureLoader().load('./tex/snow.jpg');
+
+        let iceMaterial = new THREE.MeshPhongMaterial({
+            transparent: true,
+            opacity: 1,
+            map: iceTexture
+        });
         const materialWhite = new THREE.MeshPhongMaterial({
-            color: 0xd8d0d1,
-            wireframe: false
+            color: 0x000000,
+            //emessive: 0xf2e5e5,
+            wireframe: false,
+            //map: iceTexture
         });
 
         let depthGeo = new THREE.BoxGeometry(11, 40, 10)
@@ -718,20 +739,198 @@ class End {
 
         endDepth.position.y = this.y + 20
         endDepth.position.x = this.x
-        endDepth.position.z = -29
+        endDepth.position.z = -25
 
-        let platGeo = new THREE.BoxGeometry(11, 10, 60)
+        var width = 11;
+        var height = 40;
+        var intensity = 100;
+        var rectLight = new THREE.RectAreaLight( 0xffffff, intensity,  width, height );
+
+        rectLight.position.set( endDepth.position.x,endDepth.position.y + 20, 0 );
+        rectLight.lookAt(endDepth.position.x, endDepth.position.y + 20, -25 );
+
+        rectLightObject.add(rectLight)
+
+      
+        //rectLightHelper = new THREE.RectAreaLightHelper( rectLight );
+        //rectLight.add( rectLightHelper );
+
+      
+
+        /*let platGeo = new THREE.BoxGeometry(11, 10, 60)
 
         let endPlat = new THREE.Mesh(platGeo, materialWhite)
 
         endPlat.position.y = this.y
         endPlat.position.x = this.x
         endPlat.position.z = -10
+*/
 
-        endBorders.push(endPlat)
+  //TOP
+  let geomTop = new THREE.BoxGeometry(11, 5, 50)
 
+  let platformTop = new THREE.Mesh(geomTop, iceMaterial);
+
+  platformTop.position.y = this.y
+  platformTop.position.x = this.x
+
+  platformTop.position.z = -10
+
+  
+
+
+  //snow
+  snow = new THREE.Object3D();
+
+  let frontSnow = new THREE.Object3D();
+  let rightSnow = new THREE.Object3D();
+
+  //materials
+  let lolada = new THREE.MeshBasicMaterial({ color: 0xf8d98e });
+  let snowMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+  //geometries
+  let geomSnow = new THREE.SphereGeometry(3, 30, 30);
+  let geomSnow1 = new THREE.SphereGeometry(4, 30, 30);
+  let geomSnow2 = new THREE.SphereGeometry(3.5, 30, 30);
+
+  //front
+  let snowball = new THREE.Mesh(geomSnow, iceMaterial);
+  snowball.position.x = 5
+  snowball.position.y = 0
+  snowball.position.z = 24
+  snowball.receiveShadow = true;
+  frontSnow.add(snowball)
+
+  let snowball1 = snowball.clone();
+  snowball1.position.set(-4, 0, 24)
+  snowball1.receiveShadow = true;
+  frontSnow.add(snowball1)
+
+
+  let snowball2 = new THREE.Mesh(geomSnow1, iceMaterial);
+  snowball2.position.x = 3
+  snowball2.position.y = 0
+  snowball2.position.z = 24
+  snowball2.receiveShadow = true;
+  frontSnow.add(snowball2)
+
+  let snowball3 = snowball2.clone();
+  snowball3.position.set(-4, 0, 24)
+  snowball3.receiveShadow = true;
+  frontSnow.add(snowball3)
+
+
+  let snowball4 = new THREE.Mesh(geomSnow2, iceMaterial);
+  snowball4.position.x = 0
+  snowball4.position.y = 0
+  snowball4.position.z = 24
+  snowball4.receiveShadow = true;
+  frontSnow.add(snowball4)
+
+  snow.add(frontSnow)
+
+  //back
+  let backSnow = frontSnow.clone();
+  backSnow.position.set(0, 0, -33)
+
+  snow.add(backSnow)
+
+  //right
+  let snowball5 = new THREE.Mesh(geomSnow, iceMaterial);
+  snowball5.position.x = 7
+  snowball5.position.y = 0
+  snowball5.position.z = 24
+  snowball5.receiveShadow = true;
+  rightSnow.add(snowball5)
+
+  let snowball6 = snowball5.clone();
+  snowball6.position.set(7, 0, 0)
+  snowball6.receiveShadow = true;
+  rightSnow.add(snowball6)
+
+  let snowball7 = snowball5.clone();
+  snowball7.position.set(7, 0, 5)
+  snowball7.receiveShadow = true;
+  rightSnow.add(snowball7)
+
+  let snowball8 = snowball5.clone();
+  snowball8.position.set(7, 0, -10)
+  snowball8.receiveShadow = true;
+  rightSnow.add(snowball8)
+
+  let snowball9 = new THREE.Mesh(geomSnow1, iceMaterial);
+  snowball9.position.x = 7
+  snowball9.position.y = 0
+  snowball9.position.z = 15
+  snowball9.receiveShadow = true;
+  rightSnow.add(snowball9)
+
+  let snowball10 = snowball9.clone();
+  snowball10.position.set(7, 0, 8)
+  snowball10.receiveShadow = true;
+  rightSnow.add(snowball10)
+
+  let snowball11 = new THREE.Mesh(geomSnow2, iceMaterial);
+  snowball11.position.x = 7
+  snowball11.position.y = 0
+  snowball11.position.z = 20
+  snowball11.receiveShadow = true;
+  rightSnow.add(snowball11)
+
+ 
+
+  let snowball12 = snowball11.clone();
+  snowball12.position.set(7, 0, -4)
+  snowball12.receiveShadow = true;
+  rightSnow.add(snowball12)
+
+  let snowball13 = snowball11.clone();
+  snowball13.position.set(7, 0, -12)
+  snowball13.receiveShadow = true;
+  snowball13.receiveShadow = true;
+  rightSnow.add(snowball13)
+
+  //rightSnow.receiveShadow = true;
+  snow.add(rightSnow)
+
+  //left
+  let leftSnow = rightSnow.clone();
+  leftSnow.position.set(-12, 0, 0)
+  //leftS.receiveShadow = true;
+  snow.add(leftSnow)
+
+  
+
+  platformTop.add(snow)
+
+  //BOTTOM
+  let geomBottom = new THREE.ConeGeometry(20, 20, 32)
+
+  /*
+  let platformBottom = new THREE.Mesh(geomTop, materialWhite);
+
+  platformBottom.position.y = this.y
+  platformBottom.position.x = this.x
+
+  platformBottom.position.z = -10
+
+*/
+  
+
+
+  platformTop.receiveShadow = true;
+  platformTop.castShadow = false;
+
+
+
+  platformBody.add(platformTop)
+  //platformBody.add(platformBottom)
+
+        endBorders.push(platformTop)
+
+        endObject.add(platformBody)
         endObject.add(endDepth)
-        endObject.add(endPlat)
 
     }
 }
@@ -741,11 +940,15 @@ class End {
 function createEnd() {
     endObject = new THREE.Object3D;
 
+    rectLightObject = new THREE.Object3D
     ends.forEach(function (end) {
+
+        
+
         end.create()
     })
 
-
+    scene.add(rectLightObject)
     scene.add(endObject)
 }
 
@@ -848,8 +1051,7 @@ class Platform {
 
         platformTop.position.z = -10
 
-        platformTop.receiveShadow = false;
-        platformTop.castShadow = false;
+        
 
 
         //snow
@@ -872,10 +1074,12 @@ class Platform {
         snowball.position.x = 5
         snowball.position.y = 0
         snowball.position.z = 24
+        snowball.receiveShadow = true;
         frontSnow.add(snowball)
 
         let snowball1 = snowball.clone();
         snowball1.position.set(-4, 0, 24)
+        snowball1.receiveShadow = true;
         frontSnow.add(snowball1)
 
 
@@ -883,10 +1087,12 @@ class Platform {
         snowball2.position.x = 3
         snowball2.position.y = 0
         snowball2.position.z = 24
+        snowball2.receiveShadow = true;
         frontSnow.add(snowball2)
 
         let snowball3 = snowball2.clone();
         snowball3.position.set(-4, 0, 24)
+        snowball3.receiveShadow = true;
         frontSnow.add(snowball3)
 
 
@@ -894,6 +1100,7 @@ class Platform {
         snowball4.position.x = 0
         snowball4.position.y = 0
         snowball4.position.z = 24
+        snowball4.receiveShadow = true;
         frontSnow.add(snowball4)
 
         snow.add(frontSnow)
@@ -909,51 +1116,66 @@ class Platform {
         snowball5.position.x = 7
         snowball5.position.y = 0
         snowball5.position.z = 24
+        snowball5.receiveShadow = true;
         rightSnow.add(snowball5)
 
         let snowball6 = snowball5.clone();
         snowball6.position.set(7, 0, 0)
+        snowball6.receiveShadow = true;
         rightSnow.add(snowball6)
 
         let snowball7 = snowball5.clone();
         snowball7.position.set(7, 0, 5)
+        snowball7.receiveShadow = true;
         rightSnow.add(snowball7)
 
         let snowball8 = snowball5.clone();
         snowball8.position.set(7, 0, -10)
+        snowball8.receiveShadow = true;
         rightSnow.add(snowball8)
 
         let snowball9 = new THREE.Mesh(geomSnow1, iceMaterial);
         snowball9.position.x = 7
         snowball9.position.y = 0
         snowball9.position.z = 15
+        snowball9.receiveShadow = true;
         rightSnow.add(snowball9)
 
         let snowball10 = snowball9.clone();
         snowball10.position.set(7, 0, 8)
+        snowball10.receiveShadow = true;
         rightSnow.add(snowball10)
 
         let snowball11 = new THREE.Mesh(geomSnow2, iceMaterial);
         snowball11.position.x = 7
         snowball11.position.y = 0
         snowball11.position.z = 20
+        snowball11.receiveShadow = true;
         rightSnow.add(snowball11)
+
+       
 
         let snowball12 = snowball11.clone();
         snowball12.position.set(7, 0, -4)
+        snowball12.receiveShadow = true;
         rightSnow.add(snowball12)
 
         let snowball13 = snowball11.clone();
         snowball13.position.set(7, 0, -12)
+        snowball13.receiveShadow = true;
+        snowball13.receiveShadow = true;
         rightSnow.add(snowball13)
 
+        //rightSnow.receiveShadow = true;
         snow.add(rightSnow)
 
         //left
         let leftSnow = rightSnow.clone();
         leftSnow.position.set(-12, 0, 0)
-
+        //leftS.receiveShadow = true;
         snow.add(leftSnow)
+
+        
 
         platformTop.add(snow)
 
@@ -967,14 +1189,12 @@ class Platform {
 
         platformBottom.position.z = -10
 
-        platformBottom.receiveShadow = false;
-        platformBottom.castShadow = false;
-
-
+     
         
 
 
-
+        platformTop.receiveShadow = true;
+        platformTop.castShadow = false;
 
 
 
