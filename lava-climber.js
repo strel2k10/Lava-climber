@@ -1404,7 +1404,7 @@ function animate() {
 
     let oldPos = bob.position.clone();
     checkPowerUp()
-    //lava.position.y += 0.2
+    lava.position.y += 0.2
     //camera.position.x = bob.position.x + 100;
     camera.position.y = bob.position.y + 20;
 
