@@ -42,6 +42,8 @@ let centerMesh
 let boundaryBoxFront
 let idle
 
+
+
 //lava
 let lava
 let waves = []
@@ -55,7 +57,9 @@ let floor = false
 
 //Platforms
 let platforms = []
-let platformObject
+let platformObject;
+let platformBody;
+let snow;
 
 //walls
 let walls = []
@@ -179,7 +183,7 @@ function createScene() {
 
 function createScene() {
     // create an empty scene, that will hold all our elements such as objects, cameras and lights
-    scene = new THREE.Scene();   
+    scene = new THREE.Scene();
 
     //scene.fog = new THREE.Fog(0xf7d9aa, 100);
 
@@ -540,7 +544,7 @@ function createLeftWall() {
             y: v.y,
             z: v.z,
             ang: Math.random() * Math.PI * 2,
-            amp:  1 + Math.random() * 2,
+            amp: 1 + Math.random() * 2,
             //speed:0.04+Math.random()*0.06
         })
     }
@@ -562,7 +566,7 @@ function createLeftWall() {
 
     leftWallBody.position.x = -25
     leftWallBody.position.y = mapSize.y / 4 - 10
-    leftWallBody.position.z = 75 
+    leftWallBody.position.z = 75
     borders.push(leftWallBody)
     scene.add(leftWallBody)
 
@@ -593,7 +597,7 @@ function createRightWall() {
             y: v.y,
             z: v.z,
             ang: Math.random() * Math.PI * 2,
-            amp:  2 + Math.random() * 4,
+            amp: 2 + Math.random() * 4,
             //speed:0.04+Math.random()*0.06
         })
     }
@@ -625,7 +629,7 @@ function createRightWall() {
 function createCeiling() {
 
     const materialDark = new THREE.MeshPhongMaterial({
-      
+
         wireframe: false
     });
     let ceilingGeo = new THREE.BoxGeometry(mapSize.x + 10, 10, 200)
@@ -645,7 +649,7 @@ function createFloor() {
     let iceTexture = new THREE.TextureLoader().load('./tex/ice2.png');
 
     const materialDark = new THREE.MeshPhongMaterial({
-       color: 0x5E5E5E,
+        color: 0x5E5E5E,
         map: iceTexture
     });
     let floorGeo = new THREE.BoxGeometry(mapSize.x + 50, 10, 250)
@@ -748,7 +752,7 @@ function createEnd() {
 
 function createLava() {
 
-    let lavaTexture = new THREE.TextureLoader().load('./tex/lava2.png');
+    let lavaTexture = new THREE.TextureLoader().load('./tex/lava3.jpg');
     const materialLava = new THREE.MeshPhongMaterial({
         color: 0xFF5B33,
         wireframe: false,
@@ -780,7 +784,7 @@ function createLava() {
     lava.position.x = 80
     lava.position.z = 50
     lava.position.y = -100
-    
+
     scene.add(lava)
 
 }
@@ -815,7 +819,11 @@ class Platform {
 
     create() {
 
-        let iceTexture = new THREE.TextureLoader().load('./tex/ice2.png');
+        platformBody = new THREE.Object3D();
+
+
+
+        let iceTexture = new THREE.TextureLoader().load('./tex/snow.jpg');
 
         let iceMaterial = new THREE.MeshPhongMaterial({
             transparent: true,
@@ -828,22 +836,155 @@ class Platform {
             wireframe: false
         });
 
-        let geomBody = new THREE.BoxGeometry(11, 10, 50)
 
-        let platformBody = new THREE.Mesh(geomBody, iceMaterial);
 
-        platformBody.position.y = this.y
-        platformBody.position.x = this.x
+        //TOP
+        let geomTop = new THREE.BoxGeometry(11, 5, 50)
 
-        platformBody.position.z = -10
+        let platformTop = new THREE.Mesh(geomTop, iceMaterial);
 
-        platformBody.receiveShadow = true;
-        platformBody.castShadow = false;
+        platformTop.position.y = this.y
+        platformTop.position.x = this.x
 
-        borders.push(platformBody)
+        platformTop.position.z = -10
+
+        platformTop.receiveShadow = false;
+        platformTop.castShadow = false;
+
+
+        //snow
+        snow = new THREE.Object3D();
+
+        let frontSnow = new THREE.Object3D();
+        let rightSnow = new THREE.Object3D();
+
+        //materials
+        let lolada = new THREE.MeshBasicMaterial({ color: 0xf8d98e });
+        let snowMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+        //geometries
+        let geomSnow = new THREE.SphereGeometry(3, 30, 30);
+        let geomSnow1 = new THREE.SphereGeometry(4, 30, 30);
+        let geomSnow2 = new THREE.SphereGeometry(3.5, 30, 30);
+
+        //front
+        let snowball = new THREE.Mesh(geomSnow, iceMaterial);
+        snowball.position.x = 5
+        snowball.position.y = 0
+        snowball.position.z = 24
+        frontSnow.add(snowball)
+
+        let snowball1 = snowball.clone();
+        snowball1.position.set(-4, 0, 24)
+        frontSnow.add(snowball1)
+
+
+        let snowball2 = new THREE.Mesh(geomSnow1, iceMaterial);
+        snowball2.position.x = 3
+        snowball2.position.y = 0
+        snowball2.position.z = 24
+        frontSnow.add(snowball2)
+
+        let snowball3 = snowball2.clone();
+        snowball3.position.set(-4, 0, 24)
+        frontSnow.add(snowball3)
+
+
+        let snowball4 = new THREE.Mesh(geomSnow2, iceMaterial);
+        snowball4.position.x = 0
+        snowball4.position.y = 0
+        snowball4.position.z = 24
+        frontSnow.add(snowball4)
+
+        snow.add(frontSnow)
+
+        //back
+        let backSnow = frontSnow.clone();
+        backSnow.position.set(0, 0, -33)
+
+        snow.add(backSnow)
+
+        //right
+        let snowball5 = new THREE.Mesh(geomSnow, iceMaterial);
+        snowball5.position.x = 7
+        snowball5.position.y = 0
+        snowball5.position.z = 24
+        rightSnow.add(snowball5)
+
+        let snowball6 = snowball5.clone();
+        snowball6.position.set(7, 0, 0)
+        rightSnow.add(snowball6)
+
+        let snowball7 = snowball5.clone();
+        snowball7.position.set(7, 0, 5)
+        rightSnow.add(snowball7)
+
+        let snowball8 = snowball5.clone();
+        snowball8.position.set(7, 0, -10)
+        rightSnow.add(snowball8)
+
+        let snowball9 = new THREE.Mesh(geomSnow1, iceMaterial);
+        snowball9.position.x = 7
+        snowball9.position.y = 0
+        snowball9.position.z = 15
+        rightSnow.add(snowball9)
+
+        let snowball10 = snowball9.clone();
+        snowball10.position.set(7, 0, 8)
+        rightSnow.add(snowball10)
+
+        let snowball11 = new THREE.Mesh(geomSnow2, iceMaterial);
+        snowball11.position.x = 7
+        snowball11.position.y = 0
+        snowball11.position.z = 20
+        rightSnow.add(snowball11)
+
+        let snowball12 = snowball11.clone();
+        snowball12.position.set(7, 0, -4)
+        rightSnow.add(snowball12)
+
+        let snowball13 = snowball11.clone();
+        snowball13.position.set(7, 0, -12)
+        rightSnow.add(snowball13)
+
+        snow.add(rightSnow)
+
+        //left
+        let leftSnow = rightSnow.clone();
+        leftSnow.position.set(-12, 0, 0)
+
+        snow.add(leftSnow)
+
+        platformTop.add(snow)
+
+        //BOTTOM
+        let geomBottom = new THREE.ConeGeometry(20, 20, 32)
+
+        let platformBottom = new THREE.Mesh(geomTop, materialWhite);
+
+        platformBottom.position.y = this.y
+        platformBottom.position.x = this.x
+
+        platformBottom.position.z = -10
+
+        platformBottom.receiveShadow = false;
+        platformBottom.castShadow = false;
+
+
+        
+
+
+
+
+
+
+        platformBody.add(platformTop)
+        platformBody.add(platformBottom)
+
+
 
         platformObject.add(platformBody)
-
+        borders.push(platformTop)
 
 
     }
@@ -1263,7 +1404,7 @@ function animate() {
 
     let oldPos = bob.position.clone();
     checkPowerUp()
-    lava.position.y += 0.2
+    //lava.position.y += 0.2
     //camera.position.x = bob.position.x + 100;
     camera.position.y = bob.position.y + 20;
 
