@@ -10,13 +10,13 @@ let hemisphereLight, directionalLight, directionalLightHelper, rectLightHelper;
 let maps = []
 
 maps.push([
-    // 0- Empty 1- Platforms  2- Platforms with powerups 3- platforms with end game
+    // 0- Empty 1- Platforms  2- Platforms with Jump PowerUp 3- Platforms with Lava PowerUp  4 - platforms with end game
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 0, 0, 0, 0, 0, 1, 1],
+    [0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 3, 0, 0, 0, 0, 0, 1, 1],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -51,7 +51,7 @@ maps.push([
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
     [0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 3, 3, 3, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 4, 4, 4, 0],
 ])
 
 let mapSize = {
@@ -71,6 +71,8 @@ let idle
 //lava
 let lava
 let waves = []
+let lavaPowerUpCounter = 0
+let lavaRise = 0.5
 
 //let boundaryBoxBack
 let boundaryBoxTop
@@ -93,6 +95,7 @@ let wallObject
 let leftWallCurves = []
 let rightWallCurves = []
 let backWallCurves = []
+let ceilingWallCurves = []
 //Back wall
 
 
@@ -107,6 +110,8 @@ let endObject
 //PowerUp
 let powerUps = []
 let powerUpBorders = []
+let powerUpJumpBorders = []
+//let powerUpLavaBorders
 let powerUpObject
 let powerUpHeight = 0
 let powerUpDirection = 0
@@ -168,9 +173,12 @@ function mapDraw() {
             } else if (tile == 2) {
 
                 platforms.push(new Platform(j * 10, i * 40))
-                powerUps.push(new PowerUp(j * 10, i * 40))
+                powerUps.push(new PowerUp(j * 10, i * 40, "jump"))
 
-            } else if (tile == 3) {
+            }else if(tile == 3){
+                platforms.push(new Platform(j * 10, i * 40))
+                powerUps.push(new PowerUp(j * 10, i * 40, "lava"))
+            } else if (tile == 4) {
                 //platforms.push(new Platform(j*10, i*40))
                 ends.push(new End(j * 10, i * 40))
                 /*
@@ -487,7 +495,7 @@ function createCharacter() {
 
 
 
-    bob.position.y = 30
+    bob.position.y = 70
     bob.position.x = 70
 
 
@@ -506,7 +514,7 @@ function createBackWall() {
         wireframe: false,
         map: iceTexture
     });
-    let backWallGeo = new THREE.BoxGeometry(mapSize.x + 50, mapSize.y / 2, 10, 10, 30, 10)
+    let backWallGeo = new THREE.BoxGeometry(mapSize.x + 200, mapSize.y / 2, 10, 30, 30, 10)
     let backWallBody = new THREE.Mesh(backWallGeo, materialDark);
 
 
@@ -561,7 +569,12 @@ function createLeftWall() {
         wireframe: false,
         map: iceTexture
     });
-    let leftWallGeo = new THREE.BoxGeometry(40, mapSize.y / 2, 200, 10, 30, 10)
+    let height = mapSize.y / 2 / 10; 
+    let width = 200 / 10
+
+    
+    
+    let leftWallGeo = new THREE.BoxGeometry(40, mapSize.y / 2, 500, 10, 30, 30)
     let leftWallBody = new THREE.Mesh(leftWallGeo, materialDark);
 
 
@@ -614,7 +627,7 @@ function createRightWall() {
         wireframe: false,
         map: iceTexture
     });
-    let rightWallGeo = new THREE.BoxGeometry(40, mapSize.y / 2, 200, 10, 30, 10)
+    let rightWallGeo = new THREE.BoxGeometry(40, mapSize.y / 2, 500, 10, 30, 30)
     let rightWallBody = new THREE.Mesh(rightWallGeo, materialDark);
 
 
@@ -669,6 +682,41 @@ function createCeiling() {
     let ceilingGeo = new THREE.BoxGeometry(mapSize.x + 10, 10, 200)
     let ceilingBody = new THREE.Mesh(ceilingGeo, materialDark);
 
+
+
+    let verts = ceilingBody.geometry.vertices
+
+
+
+
+    for (let i = 0; i < verts.length; i++) {
+        const v = verts[i]
+
+        ceilingWallCurves.push({
+            x: v.x,
+            y: v.y,
+            z: v.z,
+            ang: Math.random() * Math.PI * 2,
+            amp: 2 + Math.random() * 4,
+            //speed:0.04+Math.random()*0.06
+        })
+    }
+
+
+
+
+    for (let i = 0; i < verts.length; i++) {
+        const v = verts[i]
+        let vprops = ceilingWallCurves[i];
+
+        v.x = vprops.x + Math.cos(vprops.ang) * vprops.amp;
+        v.y = vprops.y + Math.sin(vprops.ang) * vprops.amp;
+        //vprops.ang += vprops.speed; // update angle for next frame
+    }
+
+    ceilingBody.geometry.verticesNeedUpdate = true;
+
+
     ceilingBody.position.x = 85
     ceilingBody.position.y = mapSize.y / 2
     ceilingBody.position.z = 75
@@ -700,28 +748,47 @@ function createFloor() {
 }
 
 class PowerUp {
-    constructor(x, y) {
+    constructor(x, y, type) {
         this.x = x
         this.y = y
+        this.type = type
     }
     create() {
 
-        let powerUpTexture = new THREE.TextureLoader().load('./tex/marble.jpg');
+        //let powerUpTexture = new THREE.TextureLoader().load('./tex/marble.jpg');
+        let powerUpJumpTexture = new THREE.TextureLoader().load('./tex/PowerUpJump.png')
+        let powerUpLavaTexture = new THREE.TextureLoader().load('./tex/PowerUpLava.png')
 
-        let powerUpMaterial = new THREE.MeshPhongMaterial({
-            transparent: true,
-            opacity: 1,
-            map: powerUpTexture
+        let powerUpJumpMaterial = new THREE.MeshPhongMaterial({
+            //transparent: true,
+            //opacity: 1,
+            map: powerUpJumpTexture
         });
 
+        let powerUpLavaMaterial = new THREE.MeshPhongMaterial({
+            map: powerUpLavaTexture
+
+        })
+
         let powerUpGeo = new THREE.SphereGeometry(5, 30, 30)
-        let powerUpBody = new THREE.Mesh(powerUpGeo, powerUpMaterial);
+        let powerUpBody
+
+        if(this.type =="jump"){
+             powerUpBody = new THREE.Mesh(powerUpGeo, powerUpJumpMaterial);
+        }else if(this.type =="lava"){
+             powerUpBody = new THREE.Mesh(powerUpGeo, powerUpLavaMaterial);
+        }
+       
 
         powerUpBody.position.y = this.y + 15
         powerUpBody.position.x = this.x + 5
         powerUpBody.castShadow = true;
 
-        powerUpBorders.push(powerUpBody)
+        
+        powerUpBorders.push({
+            body:powerUpBody,
+            type:this.type
+            })
 
         powerUpObject.add(powerUpBody)
     }
@@ -813,8 +880,17 @@ class End {
         let rightSnow = new THREE.Object3D();
 
         //materials
+
+
         let lolada = new THREE.MeshBasicMaterial({ color: 0xf8d98e });
-        let snowMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        //let snowMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        let snowTexture = new THREE.TextureLoader().load('./tex/snow.jpg');
+
+        let snowMaterial = new THREE.MeshPhongMaterial({
+            transparent: true,
+            opacity: 1,
+            map: snowTexture
+        });
 
         //geometries
         let geomSnow = new THREE.SphereGeometry(3, 30, 30);
@@ -933,6 +1009,8 @@ class End {
 
         //BOTTOM
         platformBottom = new THREE.Object3D();
+
+     
 
 
         //piramide (raio, altura, pontos na base)
@@ -1066,7 +1144,7 @@ function createLava() {
 
     lava.position.x = 80
     lava.position.z = 50
-    lava.position.y = -100
+    lava.position.y = -35
 
     scene.add(lava)
 
@@ -1580,6 +1658,18 @@ function jumpPowerUp() {
         heightLimit = 100
     }
 }
+
+function lavaPowerUp(){
+    if(lavaPowerUpCounter >0 ){
+        lavaRise = 0.2
+        lava.material.color.setHex(0x2C2C2C);
+        lavaPowerUpCounter -= 1
+    }else{
+        lavaRise = 0.5
+        lava.material.color.setHex(0xFF5B33);
+        0xFF5B33
+    }
+}
 /*
 function idleAnimation() {
     if (idle = false) {
@@ -1644,18 +1734,25 @@ function checkPowerUp() {
 
     for (let i = 0; i < powerUpObject.children.length; i++) {
 
-        let borderBox = new THREE.Box3().setFromObject(powerUpObject.children[i])
+        let borderBox = new THREE.Box3().setFromObject(powerUpBorders[i].body)
         let collision = penguinBox.intersectsBox(borderBox);
 
 
         if (collision) {
-            powerUpObject.remove(powerUpObject.children[i])
-            jumpPowerUpCounter = 300
-            return true
+            if(powerUpBorders[i].type == "jump"){
+                powerUpObject.remove(powerUpObject.children[i])
+                jumpPowerUpCounter = 300
+                return true
+            }else if(powerUpBorders[i].type =="lava"){
+                powerUpObject.remove(powerUpObject.children[i])
+                lavaPowerUpCounter = 100
+                return true
+            }
         }
     }
     return false
 }
+
 
 
 function checkBoundariesTop() {
@@ -1754,7 +1851,7 @@ function animate() {
 
     let oldPos = bob.position.clone();
     checkPowerUp()
-    //lava.position.y += 0.2
+    lava.position.y += lavaRise
     //camera.position.x = bob.position.x + 100;
     camera.position.y = bob.position.y + 20;
 
@@ -1762,7 +1859,9 @@ function animate() {
 
     updateCharacter(oldPos)
     updatePowerUps()
+    
     jumpPowerUp()
+    lavaPowerUp()
     moveLava()
     // idleAnimation()
 
